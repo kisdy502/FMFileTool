@@ -75,7 +75,7 @@ public class BaseTvRecyclerView extends RecyclerView {
                 if (null != onItemListener) {
                     if (view != null) {
                         if (hasFocus) {
-                            boolean result = onItemListener.onItemSelected(BaseTvRecyclerView.this, view, getChildLayoutPosition(view));
+                            onItemListener.onItemSelected(BaseTvRecyclerView.this, view, getChildLayoutPosition(view));
                         } else {
                             final int position = getChildLayoutPosition(view);
                             view.postDelayed(new Runnable() {

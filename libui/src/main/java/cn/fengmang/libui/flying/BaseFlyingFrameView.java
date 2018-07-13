@@ -23,8 +23,6 @@ import java.util.List;
 
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.libui.R;
-import cn.fengmang.libui.scroller.FlowHorScrollView;
-
 
 /**
  * Created by Administrator on 2018/7/10.
@@ -96,7 +94,9 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         tagetView.animate().scaleX(scaleX).scaleY(scaleY).setDuration(mAnimDuration).start();
     }
 
-    private void buildMoveAnimation(View tagetView, final float scaleX, final float scaleY) {
+    private void buildMoveAnimation(@NonNull View tagetView, final float scaleX, final float scaleY) {
+        if (tagetView == null)
+            return;
         final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
         final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
         ELog.v(TAG, String.format("paddingWidth:%f,paddingHeight:%f", paddingWidth, paddingHeight));
@@ -359,16 +359,16 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             mScrolledX = Math.abs(dx) == 1 ? 0 : dx;
             mScrolledY = Math.abs(dy) == 1 ? 0 : dy;
-            ELog.v("onScrolled...dx=" + dx + " dy=" + dy);
+            ELog.d("onScrolled...dx=" + dx + " dy=" + dy);
         }
 
         @Override
         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                ELog.v("onScrollStateChanged...IDLE");
+                ELog.e("onScrollStateChanged...IDLE");
                 final BaseFlyingFrameView flyingFrameView = mFlyingFrameViewRef.get();
                 final View focused = recyclerView.getFocusedChild();
-                ELog.v("onScrollStateChanged...border is null = " + (null == flyingFrameView));
+                ELog.e("onScrollStateChanged...border is null = " + (null == flyingFrameView));
                 if (null != flyingFrameView && null != focused) {
                     if (mScrolledX != 0 || mScrolledY != 0) {
                         ELog.i("onScrollStateChanged...scleX = " + flyingFrameView.mScaleX + " scleY = " + flyingFrameView.mScaleY);

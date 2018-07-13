@@ -15,7 +15,7 @@
     <include layout="@layout/fm_empty_layout" />
 
 
-    <cn.fengmang.libui.widget.TvRecyclerView
+    <cn.fengmang.libui.recycler.TvRecyclerView3
         android:id="@+id/fileList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,9 +25,7 @@
         android:layout_marginTop="@dimen/h140"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tvHorizontalSpacing="@dimen/w4"
-        app:tvVerticalSpacing="@dimen/h4" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"

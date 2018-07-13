@@ -29,7 +29,6 @@ public class V27GridLayoutManager extends GridLayoutManager {
 
     @Override
     public boolean requestChildRectangleOnScreen(RecyclerView parent, View child, Rect rect, boolean immediate, boolean focusedChildVisible) {
-        ELog.d("requestChildRectangleOnScreen");
         if(parent instanceof TvRecyclerView) {
             return parent.requestChildRectangleOnScreen(child, rect, immediate);
         }

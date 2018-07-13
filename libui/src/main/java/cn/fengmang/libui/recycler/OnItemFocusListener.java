@@ -1,5 +1,6 @@
 package cn.fengmang.libui.recycler;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,7 +17,7 @@ public interface OnItemFocusListener {
      * @param position 失去焦点item的位置
      * @return true表示用户处理焦点移动, TvRecyclerView不再处理焦点移动, 否则用户不再处理焦点移动，交给TvRecyclerView处理焦点移动
      */
-    boolean onItemPreSelected(RecyclerView parent, View itemView, int position);
+    boolean onItemPreSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position);
 
     /**
      * 获取焦点
@@ -26,7 +27,7 @@ public interface OnItemFocusListener {
      * @param position 获取焦点item的位置
      * @return true表示用户处理焦点移动, TvRecyclerView不再处理焦点移动, 否则用户不再处理焦点移动，交给TvRecyclerView处理焦点移动
      */
-    boolean onItemSelected(RecyclerView parent, View itemView, int position);
+    boolean onItemSelected(@NonNull RecyclerView parent,@NonNull View itemView, int position);
 
     /**
      * 处理一些偏差
@@ -36,5 +37,5 @@ public interface OnItemFocusListener {
      * @param position 获取焦点item的位置
      * @return true表示用户处理焦点移动, TvRecyclerView不再处理焦点移动, 否则用户不再处理焦点移动，交给TvRecyclerView处理焦点移动
      */
-    boolean onReviseFocusFollow(RecyclerView parent, View itemView, int position);
+    boolean onReviseFocusFollow(@NonNull RecyclerView parent,@NonNull  View itemView, int position);
 }

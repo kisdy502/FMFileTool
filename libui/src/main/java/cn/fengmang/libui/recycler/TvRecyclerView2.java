@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.FocusFinder;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -21,6 +23,7 @@ import java.lang.reflect.Method;
 
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.libui.R;
+import cn.fengmang.libui.widget.TvRecyclerView;
 
 /**
  * Created by Administrator on 2018/6/27.
@@ -37,16 +40,16 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
     protected int mColumnCount;
     protected int mOrientation;
 
-
     private boolean mAllowItemSelected = false;
 
-    private boolean mSelectedItemCentered = false;
+    private boolean mSelectedItemCentered = true;
     private int mSelectedItemOffsetStart, mSelectedItemOffsetEnd;
 
 
     private int mDuration;
     private Method smoothScrollByMethod;
     private Field mViewFlingerField;
+    private int mSelectedPosition;
 
     public TvRecyclerView2(Context context) {
         this(context, null);
@@ -89,7 +92,7 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
     private void init() {
         initScrollEvent();
 
-        initViewFlinger();
+        //initViewFlinger();
     }
 
     private void setItemSpaces(int left, int top, int right, int bottom) {
@@ -104,11 +107,11 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                ELog.v("newState:" + newState);
                 if (newState == SCROLL_STATE_IDLE) {
+                    setScrollValue(0, 0);
                     final View child = getFocusedChild();
                     final int position = getChildLayoutPosition(child);
-                    if (onItemListener != null) {
+                    if (onItemListener != null && child != null) {
                         onItemListener.onReviseFocusFollow(TvRecyclerView2.this, child, position);
                     }
                 }
@@ -120,7 +123,6 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
             }
         });
     }
-
 
 
     private void initViewFlinger() {
@@ -210,59 +212,174 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
      * 重写这个方法，可以控制焦点框距离父容器的距离,以及由于recyclerView的滚动
      * 产生的偏移量，导致焦点框错位，这里可以记录滑动偏移量。
      */
+//    @Override
+//    public boolean requestChildRectangleOnScreen(View child, Rect rect, boolean immediate) {
+//        //计算出当前viewGroup即是RecyclerView的内容区域
+//        final int parentLeft = getPaddingLeft();
+//        final int parentTop = getPaddingTop();
+//        final int parentRight = getWidth() - getPaddingRight();
+//        final int parentBottom = getHeight() - getPaddingBottom();
+//        ELog.v(TAG, String.format("pL:%d,pT:%d,pR:%d,pB:%d", parentLeft, parentTop, parentRight, parentBottom));
+//
+//        //计算出child,此时是获取焦点的view请求的区域
+//        final int childLeft = child.getLeft() + rect.left;
+//        final int childTop = child.getTop() + rect.top;
+//        final int childRight = childLeft + rect.width();
+//        final int childBottom = childTop + rect.height();
+//        ELog.v(TAG, String.format("cL:%d,cT:%d,cR:%d,cB:%d", childLeft, childTop, childRight, childBottom));
+//
+//        //获取请求区域四个方向与RecyclerView内容四个方向的距离
+//        final int offScreenLeft = Math.min(0, childLeft - parentLeft - mSelectedItemOffsetStart);
+//        final int offScreenTop = Math.min(0, childTop - parentTop - mSelectedItemOffsetStart);
+//        final int offScreenRight = Math.max(0, childRight - parentRight + mSelectedItemOffsetEnd);
+//        final int offScreenBottom = Math.max(0, childBottom - parentBottom + mSelectedItemOffsetEnd);
+//
+//        final boolean canScrollHorizontal = getLayoutManager().canScrollHorizontally();
+//        int dx;
+//        if (canScrollHorizontal) {
+//            if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+//                dx = offScreenRight != 0 ? offScreenRight
+//                        : Math.max(offScreenLeft, childRight - parentRight);
+//            } else {
+//                dx = offScreenLeft != 0 ? offScreenLeft
+//                        : Math.min(childLeft - parentLeft, offScreenRight);
+//            }
+//        } else {
+//            dx = 0;
+//        }
+//        int dy = offScreenTop != 0 ? offScreenTop
+//                : Math.min(childTop - parentTop, offScreenBottom);
+//        //在这里可以微调滑动的距离,根据项目的需要
+//        if (dx != 0 || dy != 0) {
+//            //最后执行滑动
+//            if (immediate) {
+//                scrollBy(dx, dy);
+//            } else {
+//                if (mDuration == 0) {
+//                    smoothScrollBy(dx, dy);
+//                } else {
+//                    smoothScrollBy(dx, dy, mDuration);
+//                }
+//            }
+//            return true;
+//        }
+//        postInvalidate();
+//        return false;
+//    }
+
+    private final Rect mTempRect = new Rect();
+
     @Override
     public boolean requestChildRectangleOnScreen(View child, Rect rect, boolean immediate) {
-        //计算出当前viewGroup即是RecyclerView的内容区域
-        final int parentLeft = getPaddingLeft();
-        final int parentTop = getPaddingTop();
-        final int parentRight = getWidth() - getPaddingRight();
-        final int parentBottom = getHeight() - getPaddingBottom();
-        ELog.v(TAG, String.format("pL:%d,pT:%d,pR:%d,pB:%d", parentLeft, parentTop, parentRight, parentBottom));
-
-        //计算出child,此时是获取焦点的view请求的区域
-        final int childLeft = child.getLeft() + rect.left;
-        final int childTop = child.getTop() + rect.top;
-        final int childRight = childLeft + rect.width();
-        final int childBottom = childTop + rect.height();
-        ELog.v(TAG, String.format("cL:%d,cT:%d,cR:%d,cB:%d", childLeft, childTop, childRight, childBottom));
-
-        //获取请求区域四个方向与RecyclerView内容四个方向的距离
-        final int offScreenLeft = Math.min(0, childLeft - parentLeft - mSelectedItemOffsetStart);
-        final int offScreenTop = Math.min(0, childTop - parentTop - mSelectedItemOffsetStart);
-        final int offScreenRight = Math.max(0, childRight - parentRight + mSelectedItemOffsetEnd);
-        final int offScreenBottom = Math.max(0, childBottom - parentBottom + mSelectedItemOffsetEnd);
-
-        final boolean canScrollHorizontal = getLayoutManager().canScrollHorizontally();
-        int dx;
-        if (canScrollHorizontal) {
-            if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                dx = offScreenRight != 0 ? offScreenRight
-                        : Math.max(offScreenLeft, childRight - parentRight);
-            } else {
-                dx = offScreenLeft != 0 ? offScreenLeft
-                        : Math.min(childLeft - parentLeft, offScreenRight);
-            }
-        } else {
-            dx = 0;
+        ELog.v(TAG, "requestChildRectangleOnScreen:" + rect.toString());
+        if (null == child) {
+            ELog.v(TAG, "child is null");
+            return false;
         }
-        int dy = offScreenTop != 0 ? offScreenTop
-                : Math.min(childTop - parentTop, offScreenBottom);
-        //在这里可以微调滑动的距离,根据项目的需要
+
+        if (mSelectedItemCentered) {
+            getDecoratedBoundsWithMargins(child, mTempRect);
+            ELog.d(TAG, "mTempRect:" + mTempRect.toString());
+            mSelectedItemOffsetStart = (getLayoutManager().canScrollHorizontally() ? (getFreeWidth() - mTempRect.width())
+                    : (getFreeHeight() - mTempRect.height())) / 2;
+            mSelectedItemOffsetEnd = mSelectedItemOffsetStart;
+        }
+
+        int[] scrollAmount = getChildRectangleOnScreenScrollAmount(child, rect, mSelectedItemOffsetStart, mSelectedItemOffsetEnd);
+        int dx = scrollAmount[0];
+        int dy = scrollAmount[1];
+        ELog.v(TAG, String.format("dx:%d,dy:%d", dx, dy));
+        smoothScrollBy(dx, dy);
+
         if (dx != 0 || dy != 0) {
-            //最后执行滑动
-            if (immediate) {
-                scrollBy(dx, dy);
-            } else {
-                if (mDuration == 0) {
-                    smoothScrollBy(dx, dy);
-                } else {
-                    smoothScrollBy(dx, dy, mDuration);
-                }
-            }
             return true;
         }
+        // 重绘是为了选中item置顶，具体请参考getChildDrawingOrder方法
         postInvalidate();
         return false;
+    }
+
+    private int[] getChildRectangleOnScreenScrollAmount(View focusView, Rect rect, int offsetStart, int offsetEnd) {
+        //横向滚动
+        int dx = 0;
+        int dy = 0;
+
+        getDecoratedBoundsWithMargins(focusView, mTempRect);
+        ELog.v(TAG, "mTempRect:" + mTempRect.toString());
+        ELog.v(TAG, "canScrollVertically:" + getLayoutManager().canScrollVertically());
+        ELog.v(TAG, "canScrollHorizontally:" + getLayoutManager().canScrollHorizontally());
+
+        if (getLayoutManager().canScrollHorizontally()) {
+            final int right = mTempRect.right + getPaddingRight() - getWidth();
+            final int left = mTempRect.left - getPaddingLeft();
+            dx = computeScrollOffset(left, right, offsetStart, offsetEnd);
+        }
+
+        //竖向滚动
+        if (getLayoutManager().canScrollVertically()) {
+            final int bottom = mTempRect.bottom + getPaddingBottom() - getHeight();
+            final int top = mTempRect.top - getPaddingTop();
+            dy = computeScrollOffset(top, bottom, offsetStart, offsetEnd);
+        }
+
+        return new int[]{dx, dy};
+    }
+
+    private int computeScrollOffset(int start, int end, int offsetStart, int offsetEnd) {
+//        ELog.v("start=" + start + " end=" + end + " offsetStart=" + offsetStart + " offsetEnd=" + offsetEnd);
+
+        // focusView超出下/右边界
+        if (end > 0) {
+            if (getLastVisiblePosition() != (getItemCount() - 1)) {
+                return end + offsetEnd;
+            } else {
+                return end;
+            }
+        }
+        // focusView超出上/左边界
+        else if (start < 0) {
+            if (getFirstVisiblePosition() != 0) {
+                return start - offsetStart;
+            } else {
+                return start;
+            }
+        }
+        // focusView未超出上/左边界，但边距小于指定offset
+        else if (start > 0 && start < offsetStart
+                && (canScrollHorizontally(-1) || canScrollVertically(-1))) {
+            return start - offsetStart;
+        }
+        // focusView未超出下/右边界，但边距小于指定offset
+        else if (Math.abs(end) > 0 && Math.abs(end) < offsetEnd
+                && (canScrollHorizontally(1) || canScrollVertically(1))) {
+            return offsetEnd - Math.abs(end);
+        }
+
+        return 0;
+    }
+
+    public int getFirstVisiblePosition() {
+        int index = 0;
+        if (getChildCount() == 0)
+            index = 0;
+        else
+            index = getChildAdapterPosition(getChildAt(0));
+        return index;
+    }
+
+    public int getLastVisiblePosition() {
+        final int childCount = getChildCount();
+        if (childCount == 0)
+            return 0;
+        else
+            return getChildAdapterPosition(getChildAt(childCount - 1));
+    }
+
+    public int getItemCount() {
+        if (null != getAdapter()) {
+            return getAdapter().getItemCount();
+        }
+        return 0;
     }
 
     /**
@@ -331,6 +448,45 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
         return getHeight() - getPaddingTop() - getPaddingBottom();
     }
 
+
+    private View findNextFocus(int direction) {
+        return FocusFinder.getInstance().findNextFocus(this, getFocusedChild(), direction);
+    }
+
+    @Override
+    public View focusSearch(View focused, int direction) {
+        final View nextFocusedView = findNextFocus(direction);
+        if (hasInBorder(direction, nextFocusedView)) {
+            return super.focusSearch(focused, direction);
+        } else {
+            return nextFocusedView;
+        }
+    }
+
+    /**
+     * 判断选中的item是否到达边界
+     */
+    private boolean hasInBorder(int direction, View nextFocusedView) {
+        if (null != nextFocusedView)
+            return false;
+        switch (direction) {
+            case FOCUS_DOWN:
+                return !canScrollVertically(1);
+
+            case FOCUS_UP:
+                return !canScrollVertically(-1);
+
+            case FOCUS_LEFT:
+                return !canScrollHorizontally(-1);
+
+            case FOCUS_RIGHT:
+
+                return !canScrollHorizontally(1);
+
+            default:
+                return false;
+        }
+    }
 
     /***set method***/
 
@@ -402,6 +558,85 @@ public class TvRecyclerView2 extends BaseTvRecyclerView {
 
         private int getRowsCount(int totalCount, int clunmCount) {
             return (totalCount - 1) / clunmCount + 1;
+        }
+    }
+
+    @Override
+    public void scrollToPosition(int position) {
+        scrollToPosition(position, false);
+    }
+
+    public void scrollToPosition(int position, boolean isRequestFocus) {
+        scrollToPosition(position, isRequestFocus, false, mSelectedItemOffsetStart);
+    }
+
+    @Override
+    public void smoothScrollToPosition(int position) {
+        smoothScrollToPosition(position, false);
+    }
+
+    public void smoothScrollToPosition(int position, boolean isRequestFocus) {
+        scrollToPosition(position, isRequestFocus, true, mSelectedItemOffsetStart);
+    }
+
+    private void scrollToPosition(int position, boolean isRequestFocus, boolean isSmooth, int offset) {
+        mSelectedPosition = position;
+        TvSmoothScroller smoothScroller = new TvSmoothScroller(getContext(), isRequestFocus, isSmooth, offset);
+        smoothScroller.setTargetPosition(position);
+        getLayoutManager().startSmoothScroll(smoothScroller);
+    }
+
+    private class TvSmoothScroller extends LinearSmoothScroller {
+        private boolean mRequestFocus;
+        private boolean mIsSmooth;
+        private int mOffset;
+
+        public TvSmoothScroller(Context context, boolean isRequestFocus, boolean isSmooth, int offset) {
+            super(context);
+            mRequestFocus = isRequestFocus;
+            mIsSmooth = isSmooth;
+            mOffset = offset;
+        }
+
+        @Override
+        protected int calculateTimeForScrolling(int dx) {
+            return mIsSmooth ? super.calculateTimeForScrolling(dx) :
+                    ((int) Math.ceil(Math.abs(dx) * (11f / getContext().getResources().getDisplayMetrics().densityDpi)));
+        }
+
+        @Override
+        protected void onTargetFound(View targetView, State state, Action action) {
+            if (mSelectedItemCentered && null != getLayoutManager()) {
+                getDecoratedBoundsWithMargins(targetView, mTempRect);
+                mOffset = (getLayoutManager().canScrollHorizontally() ? (getFreeWidth() - mTempRect.width())
+                        : (getFreeHeight() - mTempRect.height())) / 2;
+            }
+            super.onTargetFound(targetView, state, action);
+        }
+
+        @Override
+        public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int snapPreference) {
+            return boxStart - viewStart + mOffset;
+        }
+
+        @Override
+        protected void onStop() {
+            ELog.v(TAG, "TvSmoothScroller onStop");
+            super.onStop();
+            if (mRequestFocus) {
+                final View itemView = findViewByPosition(getTargetPosition());
+                if (null != itemView) {
+                    itemView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!hasFocus()) {
+                                onFocusChanged(true, FOCUS_DOWN, null);
+                            }
+                            itemView.requestFocus();
+                        }
+                    });
+                }
+            }
         }
     }
 }

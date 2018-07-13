@@ -62,7 +62,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
         init(context);
 
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TvRecyclerView, defStyle, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TvRecyclerView3, defStyle, 0);
         mSelectedItemCentered = a.getBoolean(R.styleable.TvRecyclerView_tvSelectedItemIsCentered, true);
         mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.TvRecyclerView_tvIsSelectFirstVisiblePosition, false);
         mSelectedItemOffsetStart = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tvSelectedItemOffsetStart, 0);
