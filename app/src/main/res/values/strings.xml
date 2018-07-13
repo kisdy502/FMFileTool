@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FMFileTool</string>
+    <string name="has_select_files">已经选中%s项</string>
+</resources>

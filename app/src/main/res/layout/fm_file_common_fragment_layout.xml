@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="@dimen/w594"
+        android:layout_height="@dimen/h234"
+        android:layout_centerInParent="true"
+        android:background="@drawable/common_dialog_bg">
+
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="@dimen/w64"
+            android:layout_height="@dimen/h64"
+            android:layout_marginRight="@dimen/w8"
+            android:layout_marginTop="@dimen/h24"
+            android:layout_toLeftOf="@id/title"
+            android:background="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/h32"
+            android:text="是否删除?"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w36" />
+
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="@dimen/w212"
+            android:layout_height="@dimen/h60"
+            android:layout_below="@id/imgLogo"
+            android:layout_marginLeft="@dimen/w52"
+            android:layout_marginTop="@dimen/h42"
+            android:background="@drawable/common_button_bg_selector"
+            android:text="取消"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w32" />
+
+        <Button
+            android:id="@+id/btn_opt"
+            android:layout_width="@dimen/w212"
+            android:layout_height="@dimen/h60"
+            android:layout_below="@id/imgLogo"
+            android:layout_marginLeft="@dimen/w64"
+            android:layout_marginTop="@dimen/h42"
+            android:layout_toRightOf="@id/btn_cancel"
+            android:background="@drawable/common_button_bg_selector"
+            android:text="删除"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w32" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

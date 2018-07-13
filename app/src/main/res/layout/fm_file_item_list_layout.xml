@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/h160"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <ImageView
+        android:id="@+id/img_file_icon"
+        android:layout_width="@dimen/w134"
+        android:layout_height="@dimen/h134"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/w64" />
+
+    <TextView
+        android:id="@+id/fileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/w36"
+        android:layout_marginTop="@dimen/h28"
+        android:layout_toRightOf="@+id/img_file_icon"
+        android:text="Android"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w32" />
+
+    <TextView
+        android:id="@+id/fileTag"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/w36"
+        android:layout_marginTop="@dimen/h28"
+        android:layout_toRightOf="@+id/fileName"
+        android:background="@color/light_blue"
+        android:padding="@dimen/w4"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w30" />
+
+    <TextView
+        android:id="@+id/fileSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fileName"
+        android:layout_marginLeft="@dimen/w36"
+        android:layout_marginTop="@dimen/h20"
+        android:layout_toRightOf="@+id/img_file_icon"
+        android:text="2015-01-01 08:00"
+        android:textColor="@color/c_0x069aff"
+        android:visibility="gone"
+        android:textSize="@dimen/w28" />
+
+    <TextView
+        android:id="@+id/fileDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fileName"
+        android:layout_marginLeft="@dimen/w36"
+        android:layout_marginTop="@dimen/h20"
+        android:layout_toRightOf="@+id/fileSize"
+        android:text="2015-01-01 08:00"
+        android:textColor="@color/c_0x069aff"
+        android:textSize="@dimen/w28" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/file_list_separator" />
+
+    <CheckBox
+        android:id="@+id/fileChecked"
+        android:layout_width="@dimen/w30"
+        android:layout_height="@dimen/h30"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/w64"
+        android:button="@drawable/checkbox_style"
+        android:visibility="gone" />
+</RelativeLayout>

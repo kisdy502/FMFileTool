@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="@dimen/w736"
+        android:layout_height="@dimen/h432"
+        android:background="@drawable/common_dialog_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="@dimen/w64"
+            android:layout_height="@dimen/h64"
+            android:layout_marginRight="@dimen/w8"
+            android:layout_marginTop="@dimen/h24"
+            android:layout_toLeftOf="@id/title"
+            android:background="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/h30"
+            android:text="文件信息"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w36" />
+
+        <TextView
+            android:id="@+id/tvFileInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/btn_opt"
+            android:layout_below="@id/title"
+            android:layout_marginBottom="@dimen/h24"
+            android:layout_marginLeft="@dimen/w30"
+            android:layout_marginRight="@dimen/w30"
+            android:layout_marginTop="@dimen/h24"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w30" />
+
+
+        <Button
+            android:id="@+id/btn_opt"
+            android:layout_width="@dimen/w212"
+            android:layout_height="@dimen/h60"
+            android:elevation="@dimen/w4"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/h24"
+            android:background="@drawable/common_button_bg_selector"
+            android:text="确定"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w32" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/fm_loading_layout" />
+
+</android.support.constraint.ConstraintLayout>

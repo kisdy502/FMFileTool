@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/w196"
+    android:layout_height="@dimen/h208"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <ImageView
+        android:id="@+id/img_file_icon"
+        android:layout_width="@dimen/w130"
+        android:layout_height="@dimen/h130"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/h24" />
+
+    <TextView
+        android:id="@+id/fileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_file_icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/w8"
+        android:layout_marginRight="@dimen/w8"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:ellipsize="marquee"
+        android:text="Android"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w32" />
+
+    <CheckBox
+        android:id="@+id/fileChecked"
+        android:layout_width="@dimen/w30"
+        android:layout_height="@dimen/h30"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/w10"
+        android:layout_marginTop="@dimen/h10"
+        android:button="@drawable/checkbox_style"
+        android:visibility="gone" />
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/fileTag"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/w30"-->
+        <!--android:visibility="gone" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/fileDate"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/w28"-->
+        <!--android:visibility="gone" />-->
+
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/file_list_separator"-->
+        <!--android:visibility="gone" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/fileSize"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/w28"-->
+        <!--android:visibility="gone" />-->
+
+
+</RelativeLayout>

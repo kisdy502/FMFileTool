@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.fengmang.file.FMFileActivity">
+
+    <include layout="@layout/fm_bg_layout" />
+
+    <include layout="@layout/fm_loading_layout" />
+
+    <include layout="@layout/fm_title_layout" />
+
+    <include layout="@layout/fm_empty_layout" />
+
+
+    <cn.fengmang.libui.widget.TvRecyclerView
+        android:id="@+id/fileList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/h88"
+        android:layout_marginLeft="@dimen/w160"
+        android:layout_marginRight="@dimen/w160"
+        android:layout_marginTop="@dimen/h140"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tvHorizontalSpacing="@dimen/w4"
+        app:tvVerticalSpacing="@dimen/h4" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/h12"
+        android:layout_marginLeft="@dimen/w160"
+        android:layout_marginRight="@dimen/w160"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fileList">
+
+        <TextView
+            android:id="@+id/selectFileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="@string/has_select_files"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w36"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/selectFileCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/has_select_files"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/w36"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
