@@ -19,7 +19,7 @@ import cn.fengmang.file.bean.FileOptItem;
 import cn.fengmang.file.utils.FileClipboard;
 import cn.fengmang.file.utils.FileOptHelper;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
-import cn.fengmang.libui.widget.TvRecyclerView;
+import cn.fengmang.libui.widget.XRecyclerView;
 
 /**
  * Created by Administrator on 2018/6/29.
@@ -27,7 +27,7 @@ import cn.fengmang.libui.widget.TvRecyclerView;
 public class FileOptDialogFragment extends BaseDialogFragment {
     private final static String TAG = "FileOptDilog";
 
-    private TvRecyclerView mRecyclerView;
+    private XRecyclerView mRecyclerView;
     private ImageView mImgArrowLeft;
     private ImageView mImgArrowRight;
     private DrawableFlyingFrameView mFlyingView;
@@ -55,19 +55,19 @@ public class FileOptDialogFragment extends BaseDialogFragment {
         mRecyclerView = mRootView.findViewById(R.id.optList);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7, GridLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
+        mRecyclerView.setOnItemListener(new XRecyclerView.OnItemListener() {
             @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+            public void onItemPreSelected(XRecyclerView parent, View itemView, int position) {
 
             }
 
             @Override
-            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+            public void onItemSelected(XRecyclerView parent, View itemView, int position) {
                 mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0f);
             }
 
             @Override
-            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+            public void onItemClick(XRecyclerView parent, View itemView, int position) {
                 ELog.d("onItemClick:"+position);
                 if (onFileOptItemClickListener != null) {
                     onFileOptItemClickListener.onExecItem(mOptList.get(position));
@@ -76,7 +76,7 @@ public class FileOptDialogFragment extends BaseDialogFragment {
             }
 
             @Override
-            public boolean onItemLongClick(TvRecyclerView parent, View itemView, int position) {
+            public boolean onItemLongClick(XRecyclerView parent, View itemView, int position) {
                 return false;
             }
         });

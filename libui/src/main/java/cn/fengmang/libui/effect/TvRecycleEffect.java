@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import cn.fengmang.baselib.ELog;
-import cn.fengmang.libui.recycler.TvRecyclerView2;
+import cn.fengmang.libui.recycler.FMRecyclerView;
 
 /**
  * Created by SDT13411 on 2018/1/15.
@@ -74,8 +74,8 @@ public class TvRecycleEffect extends BaseEffect {
             mOldHeight = moveView.getMeasuredHeight();
             Rect fromRect = findLocationWithView(moveView);
             Rect toRect = findLocationWithView(focusView);
-            if (null != focusView.getParent() && focusView.getParent() instanceof TvRecyclerView2) {
-                TvRecyclerView2 rv = (TvRecyclerView2) focusView.getParent();
+            if (null != focusView.getParent() && focusView.getParent() instanceof FMRecyclerView) {
+                FMRecyclerView rv = (FMRecyclerView) focusView.getParent();
                 ELog.v("getLeft:" + rv.getLeft());
                 ELog.v("getTop:" + rv.getTop());
 //                if (offset != -1) {

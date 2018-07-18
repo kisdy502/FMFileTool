@@ -11,7 +11,7 @@
 
     <include layout="@layout/fm_loading_layout" />
 
-    <cn.fengmang.libui.widget.TvRecyclerView
+    <cn.fengmang.libui.widget.XRecyclerView
         android:id="@+id/trv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

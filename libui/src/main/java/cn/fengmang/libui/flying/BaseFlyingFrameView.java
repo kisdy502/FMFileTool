@@ -109,7 +109,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
             ViewParent parent = child.getParent();
             if (parent instanceof RecyclerView) {
                 final RecyclerView rv = (RecyclerView) tagetView.getParent();
-                registerScrollListener(rv);
+//                registerScrollListener(rv);
                 Object tag = rv.getTag();
                 if (null != tag && tag instanceof Point) {
                     Point point = (Point) tag;
@@ -202,6 +202,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         return mWidthAnimator;
     }
 
+    @Deprecated
     private void registerScrollListener(RecyclerView recyclerView) {
         if (null != mWeakRecyclerViewRef && mWeakRecyclerViewRef.get() == recyclerView) {
             return;
@@ -261,7 +262,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
             //兼容TvRecyclerView
             if (theParent instanceof RecyclerView) {
                 final RecyclerView rv = (RecyclerView) theParent;
-                registerScrollListener(rv);
+//                registerScrollListener(rv);
                 tag = rv.getTag();
                 if (null != tag && tag instanceof Point) {
                     point = (Point) tag;
@@ -347,6 +348,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
     }
 
 
+    @Deprecated
     private static class RecyclerViewScrollListener extends RecyclerView.OnScrollListener {
         private WeakReference<BaseFlyingFrameView> mFlyingFrameViewRef;
         private int mScrolledX = 0, mScrolledY = 0;
@@ -359,7 +361,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             mScrolledX = Math.abs(dx) == 1 ? 0 : dx;
             mScrolledY = Math.abs(dy) == 1 ? 0 : dy;
-            ELog.d("onScrolled...dx=" + dx + " dy=" + dy);
+//            ELog.d("onScrolled...dx=" + dx + " dy=" + dy);
         }
 
         @Override
@@ -368,12 +370,14 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
                 ELog.e("onScrollStateChanged...IDLE");
                 final BaseFlyingFrameView flyingFrameView = mFlyingFrameViewRef.get();
                 final View focused = recyclerView.getFocusedChild();
-                ELog.e("onScrollStateChanged...border is null = " + (null == flyingFrameView));
+                ELog.e("onScrollStateChanged...border is null :" + (null == flyingFrameView));
                 if (null != flyingFrameView && null != focused) {
                     if (mScrolledX != 0 || mScrolledY != 0) {
                         ELog.i("onScrollStateChanged...scleX = " + flyingFrameView.mScaleX + " scleY = " + flyingFrameView.mScaleY);
-                        flyingFrameView.runBorderAnimation(focused, flyingFrameView.mScaleX, flyingFrameView.mScaleY);
+//                        flyingFrameView.runBorderAnimation(focused, flyingFrameView.mScaleX, flyingFrameView.mScaleY);
                     }
+                } else {
+                    ELog.e("flyingFrameView or focused is null:" + (null == focused));
                 }
                 mScrolledX = mScrolledY = 0;
             }

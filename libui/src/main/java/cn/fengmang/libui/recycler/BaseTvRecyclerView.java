@@ -1,13 +1,13 @@
 package cn.fengmang.libui.recycler;
 
 import android.content.Context;
-import android.graphics.Rect;
+import android.graphics.Point;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.View;
+import android.view.animation.Interpolator;
 
 import cn.fengmang.baselib.ELog;
 
@@ -23,21 +23,24 @@ public class BaseTvRecyclerView extends RecyclerView {
 
     protected OnItemClickListener onItemClickListener;
     protected OnItemLongClickListener onItemLongClickListener;
-    protected OnItemFocusListener onItemListener;
+    protected OnItemFocusChangeListener onItemListener;
     protected ItemViewClickListener mViewClickListener;
     protected ViewFocusListener mViewFocusListener;
+    protected int mCurrentFocusPosition;
 
-    private OnChildAttachStateChangeListener childAttachListener = new OnChildAttachStateChangeListener() {
-        @Override
-        public void onChildViewAttachedToWindow(View view) {
-            final int childPosition = getChildAdapterPosition(view);
-        }
+    /**
+     * 用途飞框位置校准
+     */
+    private Point mScrollPoint = new Point();
 
-        @Override
-        public void onChildViewDetachedFromWindow(View view) {
-            final int childPosition = getChildAdapterPosition(view);
+    void setScrollValue(int x, int y) {
+        if (x != 0 || y != 0) {
+            mScrollPoint.set(x, y);
+            setTag(mScrollPoint);
+        } else {
+            setTag(null);
         }
-    };
+    }
 
     public BaseTvRecyclerView(Context context) {
         this(context, null);
@@ -65,31 +68,30 @@ public class BaseTvRecyclerView extends RecyclerView {
         setFocusableInTouchMode(true);
         initClickEvent();
         initItemFocusEvent();
-        addOnChildAttachStateChangeListener(childAttachListener);
     }
 
     private void initItemFocusEvent() {
         mViewFocusListener = new ViewFocusListener() {
             @Override
             public void onFocusChange(final View view, boolean hasFocus) {
-                if (null != onItemListener) {
-                    if (view != null) {
-                        if (hasFocus) {
-                            onItemListener.onItemSelected(BaseTvRecyclerView.this, view, getChildLayoutPosition(view));
-                        } else {
-                            final int position = getChildLayoutPosition(view);
-                            view.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onItemListener.onItemPreSelected(BaseTvRecyclerView.this, view, position);
-                                }
-                            }, 9);
-                        }
+                if (null != onItemListener && view != null) {
+                    if (hasFocus) {
+                        mCurrentFocusPosition = getChildLayoutPosition(view);
+                        onItemListener.onItemSelected(BaseTvRecyclerView.this, view, getChildLayoutPosition(view));
+                        ELog.d(TAG, "onFocusChange:" + mCurrentFocusPosition);
+                    } else {
+                        view.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onItemListener.onItemPreSelected(BaseTvRecyclerView.this, view, getChildLayoutPosition(view));
+                            }
+                        }, 9);
                     }
                 }
             }
         };
     }
+
 
     private void initClickEvent() {
         mViewClickListener = new ItemViewClickListener() {
@@ -112,20 +114,14 @@ public class BaseTvRecyclerView extends RecyclerView {
     }
 
     @Override
-    public void stopScroll() {
-        super.stopScroll();
-        ELog.v("stopScroll");
-    }
-
-    @Override
-    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
-        ELog.v("gainFocus:" + gainFocus + ",direction:" + direction);
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-    }
-
-    @Override
-    public void setLayoutManager(LayoutManager layout) {
-        super.setLayoutManager(layout);
+    public void onScrollStateChanged(int state) {
+        if (state == SCROLL_STATE_IDLE) {
+            ELog.d("SCROLL_STATE_IDLE");
+            setScrollValue(0, 0);
+            if (onItemListener != null) {
+                onItemListener.onReviseFocusFollow(BaseTvRecyclerView.this, getFocusedChild(), getChildLayoutPosition(getFocusedChild()));
+            }
+        }
     }
 
     @Override
@@ -134,11 +130,9 @@ public class BaseTvRecyclerView extends RecyclerView {
             child.setOnClickListener(mViewClickListener);
         }
         child.setOnLongClickListener(mViewClickListener);
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return super.dispatchKeyEvent(event);
+        if (child.getOnFocusChangeListener() == null) {
+            child.setOnFocusChangeListener(mViewFocusListener);
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -149,19 +143,15 @@ public class BaseTvRecyclerView extends RecyclerView {
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    public void setOnItemFocusListener(OnItemFocusListener onItemListener) {
+    public void setOnItemFocusListener(OnItemFocusChangeListener onItemListener) {
         this.onItemListener = onItemListener;
     }
 
-    @Override
-    public void scrollBy(int x, int y) {
-        super.scrollBy(x, y);
-    }
 
     @Override
-    public void smoothScrollBy(int dx, int dy) {
-        ELog.v("smoothScrollBy:" + (dx != 0 ? dx : dy));
-        super.smoothScrollBy(dx, dy);
+    public void smoothScrollBy(int dx, int dy, Interpolator interpolator) {
+        setScrollValue(dx, dy);
+        super.smoothScrollBy(dx, dy, interpolator);
     }
 }
 

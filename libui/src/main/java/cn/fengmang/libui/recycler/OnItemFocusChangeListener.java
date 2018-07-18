@@ -8,7 +8,7 @@ import android.view.View;
  * Created by SDT13411 on 2018/1/12.
  */
 
-public interface OnItemFocusListener {
+public interface OnItemFocusChangeListener {
     /**
      * 焦点离开
      *

@@ -29,7 +29,7 @@
             android:layout_below="@+id/title"
             android:background="@android:color/white" />
 
-        <cn.fengmang.libui.widget.TvRecyclerView
+        <cn.fengmang.libui.widget.XRecyclerView
             android:id="@+id/optList"
             android:layout_width="@dimen/w836"
             android:paddingLeft="@dimen/w14"

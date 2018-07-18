@@ -36,7 +36,9 @@
         </activity>
         <activity
             android:name=".FMFileActivity"
-            android:windowSoftInputMode="adjustPan"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".FileTestActivity"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

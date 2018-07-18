@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,19 +27,19 @@ import cn.fengmang.file.dialog.FileOptDialogFragment;
 import cn.fengmang.file.dialog.FilePropertyDialogFragment;
 import cn.fengmang.file.dialog.FileRenameDialogFragment;
 import cn.fengmang.file.dialog.OnOptClickListener;
-import cn.fengmang.file.utils.MemHelper;
-import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.file.prefs.FileSettingSharePref;
 import cn.fengmang.file.utils.FileClipboard;
 import cn.fengmang.file.utils.FileIntentHelper;
 import cn.fengmang.file.utils.FileOptHelper;
 import cn.fengmang.file.utils.FileTagHelper;
+import cn.fengmang.file.utils.MemHelper;
+import cn.fengmang.libui.flying.DrawableFlyingFrameView;
+import cn.fengmang.libui.recycler.FMRecyclerView;
 import cn.fengmang.libui.recycler.OnItemClickListener;
-import cn.fengmang.libui.recycler.OnItemFocusListener;
+import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 import cn.fengmang.libui.recycler.OnItemLongClickListener;
-import cn.fengmang.libui.recycler.TvRecyclerView2;
-import cn.fengmang.libui.recycler.TvRecyclerView3;
 import cn.fengmang.libui.widget.V27GridLayoutManager;
+import cn.fengmang.libui.widget.V27LinearLayoutManager;
 
 public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickListener {
 
@@ -49,8 +50,7 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
     private final static String DLG_RENAME_COMMON_TAG = "FILE_RENAME_DIALOG";
     private final static String DLG_FILEPROP_COMMON_TAG = "FILE_PROP_DIALOG";
 
-    private TvRecyclerView3 mFileRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private FMRecyclerView mFileRecyclerView;
     private FileListAdapter mAdapter;
     private List<FileItem> mFileItemList;
     private View mEmptyLayout;
@@ -83,7 +83,7 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
     @Override
     protected void initUI() {
         super.initUI();
-        mFileRecyclerView = (TvRecyclerView3) findViewById(R.id.fileList);
+        mFileRecyclerView = (FMRecyclerView) findViewById(R.id.fileList);
         mEmptyLayout = findViewById(R.id.content_empty_layout);
         mTvSelectFileCount = (TextView) findViewById(R.id.selectFileCount);
         mTvSelectFileName = (TextView) findViewById(R.id.selectFileName);
@@ -191,25 +191,10 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
 
     private void initRecyclerView() {
         initLayoutManager();
-        mFileRecyclerView.setLayoutManager(mLayoutManager);
-        mFileRecyclerView.setSelectedItemAtCentered(true);
 
-        mFileRecyclerView.setOnItemListener(new TvRecyclerView3.OnItemListener() {
+        mFileRecyclerView.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemPreSelected(TvRecyclerView3 parent, View itemView, int position) {
-
-            }
-
-            @Override
-            public void onItemSelected(TvRecyclerView3 parent, View itemView, int position) {
-                ELog.d(TAG, "position:" + position);
-                mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0);
-                mCurrentSelectPosition = position;
-                setBottomView();
-            }
-
-            @Override
-            public void onItemClick(TvRecyclerView3 parent, View itemView, int position) {
+            public void onItemClick(RecyclerView parent, View itemView, int position) {
                 FileItem selectItem = mFileItemList.get(position);
                 if (mCheckStatus == FileOptHelper.SELECT_STATUS_ONE) {
                     ELog.i(TAG, "click:" + selectItem.getFullPath());
@@ -236,103 +221,55 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
                 }
             }
         });
-//        mFileRecyclerView.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(RecyclerView parent, View itemView, int position) {
-//                FileItem selectItem = mFileItemList.get(position);
-//                if (mCheckStatus == FileOptHelper.SELECT_STATUS_ONE) {
-//                    ELog.i(TAG, "click:" + selectItem.getFullPath());
-//                    if (selectItem.isDirectory()) {
-//                        mCurrentDir = selectItem.getFullPath();
-//                        File subRoot = new File(mCurrentDir);
-//                        initFileList(subRoot);
-//                    } else {
-//                        Intent intent = FileIntentHelper.getOpenFileIntent(selectItem.getFullPath());
-//                        startActivity(intent);
-//                    }
-//                } else {
-//                    boolean ischeck = selectItem.isChecked();
-//                    selectItem.setChecked(!ischeck);
-//                    mAdapter.notifyDataSetChanged();
-//                    if (ischeck) {
-//                        mSelectFileList.remove(new File(selectItem.getFullPath()));
-//                        mSelectFileCount--;
-//                    } else {
-//                        mSelectFileCount++;
-//                        mSelectFileList.add(selectItem.getFullPath());
-//                    }
-//                    setBottomView();
-//                }
-//            }
-//        });
-//        mFileRecyclerView.setOnItemFocusListener(new OnItemFocusListener() {
-//            @Override
-//            public boolean onItemPreSelected(RecyclerView parent, View itemView, int position) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onItemSelected(RecyclerView parent, View itemView, int position) {
-//                ELog.d(TAG, "position:" + position);
-//                mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0);
-//                mCurrentSelectPosition = position;
-//                setBottomView();
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onReviseFocusFollow(RecyclerView parent, View itemView, int position) {
-//                mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0);
-//                return false;
-//            }
-//        });
-//
-//        mFileRecyclerView.setOnItemLongClickListener(new OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(RecyclerView parent, View itemView, int position) {
-//                FileItem selectItem = mFileItemList.get(position);
-//                if (mCheckStatus == FileOptHelper.SELECT_STATUS_ONE) {
-//                    mCheckStatus = FileOptHelper.SELECT_STATUS_MUILT;
-//                    selectItem.setChecked(true);
-//                    mSelectFileCount++;
-//                    if (!mSelectFileList.contains(selectItem.getFullPath()))
-//                        mSelectFileList.add(selectItem.getFullPath());
-//                    mAdapter.setCheckStatus(mCheckStatus);
-//                    setBottomView();
-//                }
-//                return true;
-//            }
-//        });
 
+        mFileRecyclerView.setOnItemFocusListener(new OnItemFocusChangeListener() {
+            @Override
+            public boolean onItemPreSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                return false;
+            }
 
-//        mFileRecyclerView.setOnItemListener(new TvRecyclerView.OnItemListener() {
-//            @Override
-//            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-//
-//            }
-//
-//            @Override
-//            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-//
-//            }
-//
-//            @Override
-//            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-//
-//            }
-//
-//            @Override
-//            public boolean onItemLongClick(TvRecyclerView parent, View itemView, int position) {
-//
-//            }
-//        });
+            @Override
+            public boolean onItemSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                ELog.d(TAG, "onItemSelected:" + position);
+                mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0);
+                mCurrentSelectPosition = position;
+                setBottomView();
+                return false;
+            }
+
+            @Override
+            public boolean onReviseFocusFollow(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                ELog.d(TAG, "onReviseFocusFollow:" + position);
+                mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0);
+                return false;
+            }
+        });
+
+        mFileRecyclerView.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(RecyclerView parent, View itemView, int position) {
+                FileItem selectItem = mFileItemList.get(position);
+                if (mCheckStatus == FileOptHelper.SELECT_STATUS_ONE) {
+                    mCheckStatus = FileOptHelper.SELECT_STATUS_MUILT;
+                    selectItem.setChecked(true);
+                    mSelectFileCount++;
+                    if (!mSelectFileList.contains(selectItem.getFullPath()))
+                        mSelectFileList.add(selectItem.getFullPath());
+                    mAdapter.setCheckStatus(mCheckStatus);
+                    setBottomView();
+                }
+                return true;
+            }
+        });
     }
 
     private void initLayoutManager() {
         if (mViewtMode == FileOptHelper.VIEW_MODE_LIST) {
-            mLayoutManager = new V27GridLayoutManager(this, 1, LinearLayoutManager.VERTICAL, false);
+            V27LinearLayoutManager mLayoutManager = new V27LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            mFileRecyclerView.setLayoutManager(mLayoutManager);
         } else {
-            mLayoutManager = new V27GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
+            V27GridLayoutManager mLayoutManager = new V27GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
+            mFileRecyclerView.setLayoutManager(mLayoutManager);
         }
     }
 
@@ -418,14 +355,12 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
         } else if ("list_view".equals(cmd)) {
             mViewtMode = FileOptHelper.VIEW_MODE_LIST;
             initLayoutManager();
-            mFileRecyclerView.setLayoutManager(mLayoutManager);
             mAdapter = new FileListAdapter(mCheckStatus, mViewtMode, mFileItemList, getApplicationContext());
             mFileRecyclerView.setAdapter(mAdapter);
             mFileRecyclerView.requestFocus();
         } else if ("grid_view".equals(cmd)) {
             mViewtMode = FileOptHelper.VIEW_MODE_GRID;
             initLayoutManager();
-            mFileRecyclerView.setLayoutManager(mLayoutManager);
             mAdapter = new FileListAdapter(mCheckStatus, mViewtMode, mFileItemList, getApplicationContext());
             mFileRecyclerView.setAdapter(mAdapter);
             mFileRecyclerView.requestFocus();
@@ -456,8 +391,17 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
                 }
                 newItem.setEmpty(true);
                 mFileItemList.add(newItem);
-                mAdapter.notifyItemInserted(mFileItemList.size() - 1);
-                mFileRecyclerView.smoothScrollToPosition(mFileItemList.size() - 1);
+                if (mFileItemList.size() == 1) {
+                    mFlyingView.setVisibility(View.VISIBLE);
+                    mEmptyLayout.setVisibility(View.GONE);
+                    mAdapter = new FileListAdapter(mCheckStatus, mViewtMode, mFileItemList, getApplicationContext());
+                    mFileRecyclerView.setAdapter(mAdapter);
+                    mFileRecyclerView.setVisibility(View.VISIBLE);
+                    mFileRecyclerView.requestFocus();
+                } else {
+                    mAdapter.notifyItemInserted(mFileItemList.size() - 1);
+                    mFileRecyclerView.smoothScrollToPosition(mFileItemList.size() - 1);
+                }
                 Toast.makeText(this, "新建文件夹成功", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "新建文件夹失败", Toast.LENGTH_SHORT).show();
@@ -490,17 +434,17 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
     @SuppressLint("StringFormatMatches")
     private void setBottomView() {
         if (mViewtMode == FileOptHelper.VIEW_MODE_GRID) {
-            mTvSelectFileCount.setVisibility(View.GONE);
+            mTvSelectFileCount.setVisibility(View.INVISIBLE);
             mTvSelectFileName.setVisibility(View.VISIBLE);
             String name = mFileItemList.get(mCurrentSelectPosition).getFileName();
             ELog.d(TAG, "fileName:" + name);
             mTvSelectFileName.setText(name);
         } else {
-            mTvSelectFileName.setVisibility(View.GONE);
+            mTvSelectFileName.setVisibility(View.INVISIBLE);
         }
 
         if (mCheckStatus == FileOptHelper.SELECT_STATUS_ONE) {
-            mTvSelectFileCount.setVisibility(View.GONE);
+            mTvSelectFileCount.setVisibility(View.INVISIBLE);
         } else {
             mTvSelectFileCount.setVisibility(View.VISIBLE);
             mTvSelectFileCount.setText(getString(R.string.has_select_files, mSelectFileCount));
@@ -567,6 +511,7 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
                     mEmptyLayout.setVisibility(View.VISIBLE);
                     mTvSelectFileCount.setVisibility(View.GONE);
                     mTvSelectFileName.setVisibility(View.GONE);
+                    mFlyingView.setVisibility(View.GONE);
                 }
             } else {
                 FileOptHelper.deleteFileList(mSelectFileList);//

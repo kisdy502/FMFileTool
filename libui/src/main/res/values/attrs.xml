@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <declare-styleable name="TvRecyclerView2">
+    <declare-styleable name="FMRecyclerView">
         <attr name="itemSpaceLeft" format="dimension" />
         <attr name="itemSpaceRight" format="dimension" />
         <attr name="itemSpaceTop" format="dimension" />
@@ -14,7 +14,7 @@
     </declare-styleable>
 
 
-    <declare-styleable name="TvRecyclerView">
+    <declare-styleable name="XRecyclerView">
         <attr name="android:orientation" tools:ignore="ResourceName"/>
         <attr name="tvLayoutManager" format="string"/>
         <attr name="tvNumColumns" format="integer"/>

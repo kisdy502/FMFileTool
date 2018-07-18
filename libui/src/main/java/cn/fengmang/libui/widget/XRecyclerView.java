@@ -21,7 +21,7 @@ import cn.fengmang.libui.R;
  * Created by Administrator on 2018/7/6.
  */
 
-public class TvRecyclerView extends RecyclerView implements View.OnClickListener, View.OnLongClickListener, View.OnFocusChangeListener {
+public class XRecyclerView extends RecyclerView implements View.OnClickListener, View.OnLongClickListener, View.OnFocusChangeListener {
 
     private final static String TAG = "TvRecyclerView";
 
@@ -49,28 +49,29 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     private boolean mOptimizeLayout;
     private final IRecyclerViewDataObserver mDataObserver = new IRecyclerViewDataObserver();
 
-    public TvRecyclerView(Context context) {
+    public XRecyclerView(Context context) {
         this(context, null);
     }
 
-    public TvRecyclerView(Context context, AttributeSet attrs) {
+    public XRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TvRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+    public XRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         init(context);
-
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.TvRecyclerView3, defStyle, 0);
-        mSelectedItemCentered = a.getBoolean(R.styleable.TvRecyclerView_tvSelectedItemIsCentered, true);
-        mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.TvRecyclerView_tvIsSelectFirstVisiblePosition, false);
-        mSelectedItemOffsetStart = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tvSelectedItemOffsetStart, 0);
-        mSelectedItemOffsetEnd = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tvSelectedItemOffsetEnd, 0);
-        mIsMenu = a.getBoolean(R.styleable.TvRecyclerView_tvIsMenu, false);
-        mVerticalSpacing = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tvVerticalSpacing, 0);
-        mHorizontalSpacing = a.getDimensionPixelOffset(R.styleable.TvRecyclerView_tvHorizontalSpacing, 0);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.XRecyclerView, defStyle, 0);
+        mSelectedItemCentered = a.getBoolean(R.styleable.XRecyclerView_tvSelectedItemIsCentered, true);
+        mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.XRecyclerView_tvIsSelectFirstVisiblePosition, false);
+        mSelectedItemOffsetStart = a.getDimensionPixelOffset(R.styleable.XRecyclerView_tvSelectedItemOffsetStart, 0);
+        mSelectedItemOffsetEnd = a.getDimensionPixelOffset(R.styleable.XRecyclerView_tvSelectedItemOffsetEnd, 0);
+        mIsMenu = a.getBoolean(R.styleable.XRecyclerView_tvIsMenu, false);
+        mVerticalSpacing = a.getDimensionPixelOffset(R.styleable.XRecyclerView_tvVerticalSpacing, 0);
+        mHorizontalSpacing = a.getDimensionPixelOffset(R.styleable.XRecyclerView_tvHorizontalSpacing, 0);
         a.recycle();
+        if (mVerticalSpacing != 0 || mHorizontalSpacing != 0) {
+            setSpacing(mVerticalSpacing, mHorizontalSpacing);
+        }
     }
 
     private void init(Context context) {
@@ -88,9 +89,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
         //修复adapter.notifyItemChanged时焦点闪烁的问题
         ((SimpleItemAnimator) getItemAnimator()).setSupportsChangeAnimations(false);
-        if (mVerticalSpacing != 0 || mHorizontalSpacing != 0) {
-            setSpacing(mVerticalSpacing, mHorizontalSpacing);
-        }
+
     }
 
     public int getSelectedPosition() {
@@ -157,7 +156,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     public void onClick(View itemView) {
         if (null != mOnItemListener && this != itemView) {
-            mOnItemListener.onItemClick(TvRecyclerView.this, itemView, getChildAdapterPosition(itemView));
+            mOnItemListener.onItemClick(XRecyclerView.this, itemView, getChildAdapterPosition(itemView));
         }
     }
 
@@ -165,7 +164,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     public boolean onLongClick(View itemView) {
         if (null != mOnItemListener && this != itemView) {
-            return mOnItemListener.onItemLongClick(TvRecyclerView.this, itemView, getChildAdapterPosition(itemView));
+            return mOnItemListener.onItemLongClick(XRecyclerView.this, itemView, getChildAdapterPosition(itemView));
         }
         return false;
     }
@@ -181,7 +180,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                     itemView.setActivated(false);
                 }
                 if (null != mOnItemListener)
-                    mOnItemListener.onItemSelected(TvRecyclerView.this, itemView, position);
+                    mOnItemListener.onItemSelected(XRecyclerView.this, itemView, position);
             } else {
                 itemView.postDelayed(new Runnable() {
                     @Override
@@ -197,7 +196,7 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
                     }
                 }, 100);
                 if (null != mOnItemListener)
-                    mOnItemListener.onItemPreSelected(TvRecyclerView.this, itemView, position);
+                    mOnItemListener.onItemPreSelected(XRecyclerView.this, itemView, position);
             }
 
         }
@@ -643,12 +642,12 @@ public class TvRecyclerView extends RecyclerView implements View.OnClickListener
 
 
     public interface OnItemListener {
-        void onItemPreSelected(TvRecyclerView parent, View itemView, int position);
+        void onItemPreSelected(XRecyclerView parent, View itemView, int position);
 
-        void onItemSelected(TvRecyclerView parent, View itemView, int position);
+        void onItemSelected(XRecyclerView parent, View itemView, int position);
 
-        void onItemClick(TvRecyclerView parent, View itemView, int position);
+        void onItemClick(XRecyclerView parent, View itemView, int position);
 
-        boolean onItemLongClick(TvRecyclerView parent, View itemView, int position);
+        boolean onItemLongClick(XRecyclerView parent, View itemView, int position);
     }
 }

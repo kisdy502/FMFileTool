@@ -3,6 +3,7 @@ package cn.fengmang.file;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,19 +12,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.fengmang.file.utils.MemHelper;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.file.utils.PermissionsUtil;
-import cn.fengmang.libui.recycler.TvRecyclerView2;
-import cn.fengmang.libui.widget.TvRecyclerView;
+import cn.fengmang.libui.recycler.FMRecyclerView;
+import cn.fengmang.libui.widget.XRecyclerView;
 import cn.fengmang.libui.widget.V27GridLayoutManager;
 
 public class FMainActivity extends FMBaseActivity {
 
-    private TvRecyclerView mTvList;
+    private XRecyclerView mTvList;
     private GridLayoutManager mGridLayoutManager;
     private DrawableFlyingFrameView mFlyingView;
 
@@ -52,11 +55,16 @@ public class FMainActivity extends FMBaseActivity {
         mFlyingView = DrawableFlyingFrameView.build(this);
         mFlyingView.setFlyingDrawable(getResources().getDrawable(R.drawable.hover_item));
         MemHelper.printfTvInfo(this);
+        try {
+            testCreateFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
     private void initView() {
-        mTvList = ((TvRecyclerView) findViewById(R.id.trv));
+        mTvList = ((XRecyclerView) findViewById(R.id.trv));
         mGridLayoutManager = new V27GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -79,28 +87,28 @@ public class FMainActivity extends FMBaseActivity {
         });
 
         mTvList.setLayoutManager(mGridLayoutManager);
-        mTvList.setOnItemListener(new TvRecyclerView.OnItemListener() {
+        mTvList.setOnItemListener(new XRecyclerView.OnItemListener() {
             @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
+            public void onItemPreSelected(XRecyclerView parent, View itemView, int position) {
 
             }
 
             @Override
-            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
+            public void onItemSelected(XRecyclerView parent, View itemView, int position) {
                 mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0f);
             }
 
             @Override
-            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+            public void onItemClick(XRecyclerView parent, View itemView, int position) {
                 if (position == 0) {
-
+                    startActivity(new Intent(FMainActivity.this, FileTestActivity.class));
                 } else if (position == 1) {
                     startActivity(new Intent(FMainActivity.this, FMFileActivity.class));
                 }
             }
 
             @Override
-            public boolean onItemLongClick(TvRecyclerView parent, View itemView, int position) {
+            public boolean onItemLongClick(XRecyclerView parent, View itemView, int position) {
                 return false;
             }
         });
@@ -109,7 +117,7 @@ public class FMainActivity extends FMBaseActivity {
     }
 
 
-    class MenuAdapter extends TvRecyclerView2.Adapter<MenuHolder> {
+    class MenuAdapter extends FMRecyclerView.Adapter<MenuHolder> {
         @Override
         public MenuHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView;
@@ -167,5 +175,23 @@ public class FMainActivity extends FMBaseActivity {
             itemIcon = itemView.findViewById(R.id.item_icon);
             itemDesc = itemView.findViewById(R.id.item_desc);
         }
+    }
+
+
+    private void testCreateFile() throws IOException {
+
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File sdCard = Environment.getExternalStorageDirectory();
+            File testFile = new File(sdCard, "index");
+            if (!testFile.exists()) {
+                testFile.mkdirs();
+                File temp;
+                for (int i = 0; i < 1200; i++) {
+                    temp = new File(testFile, String.valueOf(i));
+                    temp.createNewFile();
+                }
+            }
+        }
+
     }
 }

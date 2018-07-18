@@ -13,6 +13,6 @@ public class FMApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ELog.setTagLevel(ELog.LEVEL_D);
+        ELog.setTagLevel(ELog.LEVEL_V);
     }
 }
