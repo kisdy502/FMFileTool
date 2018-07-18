@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,15 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.fengmang.file.utils.MemHelper;
-import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.file.utils.PermissionsUtil;
+import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.libui.recycler.FMRecyclerView;
-import cn.fengmang.libui.widget.XRecyclerView;
-import cn.fengmang.libui.widget.V27GridLayoutManager;
+import cn.fengmang.libui.recycler.OnItemClickListener;
+import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 
 public class FMainActivity extends FMBaseActivity {
 
-    private XRecyclerView mTvList;
+    private FMRecyclerView mTvList;
     private GridLayoutManager mGridLayoutManager;
     private DrawableFlyingFrameView mFlyingView;
 
@@ -64,8 +65,8 @@ public class FMainActivity extends FMBaseActivity {
 
 
     private void initView() {
-        mTvList = ((XRecyclerView) findViewById(R.id.trv));
-        mGridLayoutManager = new V27GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
+        mTvList = ((FMRecyclerView) findViewById(R.id.trv));
+        mGridLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -87,29 +88,33 @@ public class FMainActivity extends FMBaseActivity {
         });
 
         mTvList.setLayoutManager(mGridLayoutManager);
-        mTvList.setOnItemListener(new XRecyclerView.OnItemListener() {
+        mTvList.setOnItemFocusListener(new OnItemFocusChangeListener() {
             @Override
-            public void onItemPreSelected(XRecyclerView parent, View itemView, int position) {
-
+            public boolean onItemPreSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                return false;
             }
 
             @Override
-            public void onItemSelected(XRecyclerView parent, View itemView, int position) {
+            public boolean onItemSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
                 mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0f);
+                return false;
             }
 
             @Override
-            public void onItemClick(XRecyclerView parent, View itemView, int position) {
+            public boolean onReviseFocusFollow(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                return false;
+            }
+        });
+
+        mTvList.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View itemView, int position) {
                 if (position == 0) {
                     startActivity(new Intent(FMainActivity.this, FileTestActivity.class));
                 } else if (position == 1) {
                     startActivity(new Intent(FMainActivity.this, FMFileActivity.class));
                 }
-            }
 
-            @Override
-            public boolean onItemLongClick(XRecyclerView parent, View itemView, int position) {
-                return false;
             }
         });
         mAdapter = new MenuAdapter();

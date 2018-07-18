@@ -29,17 +29,19 @@
             android:layout_below="@+id/title"
             android:background="@android:color/white" />
 
-        <cn.fengmang.libui.widget.XRecyclerView
+        <cn.fengmang.libui.recycler.FMRecyclerView
             android:id="@+id/optList"
             android:layout_width="@dimen/w836"
-            android:paddingLeft="@dimen/w14"
-            android:paddingRight="@dimen/w14"
             android:layout_height="match_parent"
             android:layout_below="@+id/split"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/h116"
-            app:tvHorizontalSpacing="@dimen/w36"
-            app:tvVerticalSpacing="@dimen/h16" />
+            android:paddingLeft="@dimen/w14"
+            android:paddingRight="@dimen/w14"
+            app:itemSpaceBottom="@dimen/h8"
+            app:itemSpaceLeft="@dimen/w18"
+            app:itemSpaceRight="@dimen/w18"
+            app:itemSpaceTop="@dimen/h8" />
 
         <ImageView
             android:id="@+id/arrow_left"

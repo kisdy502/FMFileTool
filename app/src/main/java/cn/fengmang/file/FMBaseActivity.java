@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import cn.fengmang.libui.FMProgressBar;
-import cn.fengmang.libui.effect.BaseEffect;
-import cn.fengmang.libui.effect.FocusFrameView;
 
 /**
  * Created by Administrator on 2018/6/27.

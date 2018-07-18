@@ -1,6 +1,7 @@
 package cn.fengmang.file.dialog;
 
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -19,7 +20,9 @@ import cn.fengmang.file.bean.FileOptItem;
 import cn.fengmang.file.utils.FileClipboard;
 import cn.fengmang.file.utils.FileOptHelper;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
-import cn.fengmang.libui.widget.XRecyclerView;
+import cn.fengmang.libui.recycler.FMRecyclerView;
+import cn.fengmang.libui.recycler.OnItemClickListener;
+import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 
 /**
  * Created by Administrator on 2018/6/29.
@@ -27,7 +30,7 @@ import cn.fengmang.libui.widget.XRecyclerView;
 public class FileOptDialogFragment extends BaseDialogFragment {
     private final static String TAG = "FileOptDilog";
 
-    private XRecyclerView mRecyclerView;
+    private FMRecyclerView mRecyclerView;
     private ImageView mImgArrowLeft;
     private ImageView mImgArrowRight;
     private DrawableFlyingFrameView mFlyingView;
@@ -55,31 +58,35 @@ public class FileOptDialogFragment extends BaseDialogFragment {
         mRecyclerView = mRootView.findViewById(R.id.optList);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7, GridLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setOnItemListener(new XRecyclerView.OnItemListener() {
+        mRecyclerView.setOnItemFocusListener(new OnItemFocusChangeListener() {
             @Override
-            public void onItemPreSelected(XRecyclerView parent, View itemView, int position) {
-
+            public boolean onItemPreSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                return false;
             }
 
             @Override
-            public void onItemSelected(XRecyclerView parent, View itemView, int position) {
+            public boolean onItemSelected(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
                 mFlyingView.onMoveTo(itemView, 1.0f, 1.0f, 0f);
+                return false;
             }
 
             @Override
-            public void onItemClick(XRecyclerView parent, View itemView, int position) {
+            public boolean onReviseFocusFollow(@NonNull RecyclerView parent, @NonNull View itemView, int position) {
+                return false;
+            }
+        });
+
+        mRecyclerView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View itemView, int position) {
                 ELog.d("onItemClick:"+position);
                 if (onFileOptItemClickListener != null) {
                     onFileOptItemClickListener.onExecItem(mOptList.get(position));
                 }
                 dismiss();
             }
-
-            @Override
-            public boolean onItemLongClick(XRecyclerView parent, View itemView, int position) {
-                return false;
-            }
         });
+
         mFlyingView = DrawableFlyingFrameView.build((ViewGroup) mRootView);
         mFlyingView.setFlyingDrawable(getResources().getDrawable(R.drawable.hover_item));
 

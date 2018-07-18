@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -38,8 +39,6 @@ import cn.fengmang.libui.recycler.FMRecyclerView;
 import cn.fengmang.libui.recycler.OnItemClickListener;
 import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 import cn.fengmang.libui.recycler.OnItemLongClickListener;
-import cn.fengmang.libui.widget.V27GridLayoutManager;
-import cn.fengmang.libui.widget.V27LinearLayoutManager;
 
 public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickListener {
 
@@ -265,10 +264,10 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
 
     private void initLayoutManager() {
         if (mViewtMode == FileOptHelper.VIEW_MODE_LIST) {
-            V27LinearLayoutManager mLayoutManager = new V27LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             mFileRecyclerView.setLayoutManager(mLayoutManager);
         } else {
-            V27GridLayoutManager mLayoutManager = new V27GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
+            GridLayoutManager mLayoutManager = new GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
             mFileRecyclerView.setLayoutManager(mLayoutManager);
         }
     }

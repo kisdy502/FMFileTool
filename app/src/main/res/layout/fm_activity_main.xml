@@ -11,14 +11,16 @@
 
     <include layout="@layout/fm_loading_layout" />
 
-    <cn.fengmang.libui.widget.XRecyclerView
+    <cn.fengmang.libui.recycler.FMRecyclerView
         android:id="@+id/trv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/w160"
         android:layout_marginTop="@dimen/h120"
-        app:tvHorizontalSpacing="@dimen/w20"
-        app:tvVerticalSpacing="@dimen/h20"
+        app:itemSpaceLeft="@dimen/w10"
+        app:itemSpaceRight="@dimen/w10"
+        app:itemSpaceTop="@dimen/h10"
+        app:itemSpaceBottom="@dimen/h10"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
