@@ -17,10 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/w160"
         android:layout_marginTop="@dimen/h120"
-        app:itemSpaceLeft="@dimen/w10"
-        app:itemSpaceRight="@dimen/w10"
-        app:itemSpaceTop="@dimen/h10"
-        app:itemSpaceBottom="@dimen/h10"
+        app:itemSpaceVertical="@dimen/w10"
+        app:itemSpaceHorizontal="@dimen/w10"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

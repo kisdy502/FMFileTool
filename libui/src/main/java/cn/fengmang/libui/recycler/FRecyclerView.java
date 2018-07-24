@@ -199,6 +199,8 @@ public class FRecyclerView extends RecyclerView {
         return false;
     }
 
+
+
     @Override
     public void smoothScrollBy(int dx, int dy, Interpolator interpolator) {
         setScrollValue(dx, dy);

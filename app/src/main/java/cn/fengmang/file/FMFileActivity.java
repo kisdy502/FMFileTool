@@ -39,6 +39,8 @@ import cn.fengmang.libui.recycler.FMRecyclerView;
 import cn.fengmang.libui.recycler.OnItemClickListener;
 import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 import cn.fengmang.libui.recycler.OnItemLongClickListener;
+import cn.fengmang.libui.recycler.V7GridLayoutManager;
+import cn.fengmang.libui.recycler.V7LinearLayoutManager;
 
 public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickListener {
 
@@ -71,16 +73,15 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
     private int mCurrentSelectPosition;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSortType = FileSettingSharePref.getInstance().getFileSortType(this, FileOptHelper.SORT_BYNAME);
         mViewtMode = FileSettingSharePref.getInstance().getViewMode(this, FileOptHelper.VIEW_MODE_LIST);
         setContentView(R.layout.fm_activity_fmfile);
-
     }
 
     @Override
-    protected void initUI() {
+    public void initUI() {
         super.initUI();
         mFileRecyclerView = (FMRecyclerView) findViewById(R.id.fileList);
         mEmptyLayout = findViewById(R.id.content_empty_layout);
@@ -264,10 +265,10 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
 
     private void initLayoutManager() {
         if (mViewtMode == FileOptHelper.VIEW_MODE_LIST) {
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            V7LinearLayoutManager mLayoutManager = new V7LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             mFileRecyclerView.setLayoutManager(mLayoutManager);
         } else {
-            GridLayoutManager mLayoutManager = new GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
+            V7GridLayoutManager mLayoutManager = new V7GridLayoutManager(this, 6, LinearLayoutManager.VERTICAL, false);
             mFileRecyclerView.setLayoutManager(mLayoutManager);
         }
     }
@@ -548,11 +549,12 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
             FileClipboard.pasteFile(currentFile);
             initFileList(currentFile);
         }
+        setBottomView();
     }
 
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         FileSettingSharePref.getInstance().setFileSortType(this, mSortType);
         FileSettingSharePref.getInstance().setViewMode(this, mViewtMode);
         super.onDestroy();

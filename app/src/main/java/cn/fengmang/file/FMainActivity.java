@@ -3,7 +3,6 @@ package cn.fengmang.file;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +31,8 @@ public class FMainActivity extends FMBaseActivity {
     private static List<MenuItem> mDatas = new ArrayList<>();
 
     static {
-        mDatas.add(new MenuItem("应用管理", 0));
-        mDatas.add(new MenuItem("文件管理", 1));
+        mDatas.add(new MenuItem("文件管理", 0));
+        mDatas.add(new MenuItem("应用管理", 1));
         mDatas.add(new MenuItem("文件分类", 2));
         mDatas.add(new MenuItem("远程管理", 2));
         mDatas.add(new MenuItem("内存清理", 2));
@@ -46,7 +43,7 @@ public class FMainActivity extends FMBaseActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fm_activity_main);
         initView();
@@ -56,11 +53,6 @@ public class FMainActivity extends FMBaseActivity {
         mFlyingView = DrawableFlyingFrameView.build(this);
         mFlyingView.setFlyingDrawable(getResources().getDrawable(R.drawable.hover_item));
         MemHelper.printfTvInfo(this);
-        try {
-            testCreateFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -110,9 +102,9 @@ public class FMainActivity extends FMBaseActivity {
             @Override
             public void onItemClick(RecyclerView parent, View itemView, int position) {
                 if (position == 0) {
-                    startActivity(new Intent(FMainActivity.this, FileTestActivity.class));
-                } else if (position == 1) {
                     startActivity(new Intent(FMainActivity.this, FMFileActivity.class));
+                } else if (position == 1) {
+                    startActivity(new Intent(FMainActivity.this, FMAppActivity.class));
                 }
 
             }
@@ -183,20 +175,5 @@ public class FMainActivity extends FMBaseActivity {
     }
 
 
-    private void testCreateFile() throws IOException {
 
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            File sdCard = Environment.getExternalStorageDirectory();
-            File testFile = new File(sdCard, "index");
-            if (!testFile.exists()) {
-                testFile.mkdirs();
-                File temp;
-                for (int i = 0; i < 1200; i++) {
-                    temp = new File(testFile, String.valueOf(i));
-                    temp.createNewFile();
-                }
-            }
-        }
-
-    }
 }

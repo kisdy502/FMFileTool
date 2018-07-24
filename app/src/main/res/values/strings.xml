@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">FMFileTool</string>
     <string name="has_select_files">已经选中%s项</string>
+    <string name="fm_version_info">版本号:%s</string>
+    <string name="fm_md5_info">MD5:%s</string>
+    <string name="fm_sha1_info">SHA1:%s</string>
 </resources>

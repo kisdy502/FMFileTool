@@ -10,4 +10,5 @@
     <color name="color_f34738">#fff34738</color>
     <color name="orange">#ffff9900</color>
     <color name="c_0x069aff">#ff069aff</color>
+    <color name="item_text_default">#80FFFFFF</color>
 </resources>

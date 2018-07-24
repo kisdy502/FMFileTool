@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="FMRecyclerView">
-        <attr name="itemSpaceLeft" format="dimension" />
-        <attr name="itemSpaceRight" format="dimension" />
-        <attr name="itemSpaceTop" format="dimension" />
-        <attr name="itemSpaceBottom" format="dimension" />
-
-        <attr name="recyclerPadding" format="dimension" />
-        <attr name="recyclerPaddingLeft" format="dimension" />
-        <attr name="recyclerPaddingRight" format="dimension" />
-        <attr name="recyclerPaddingTop" format="dimension" />
-        <attr name="recyclerPaddingBottom" format="dimension" />
+        <attr name="itemSpaceVertical" format="dimension" />
+        <attr name="itemSpaceHorizontal" format="dimension" />
+        <attr name="recyclerPaddingVertical" format="dimension" />
+        <attr name="recyclerPaddingHorizontal" format="dimension" />
     </declare-styleable>
-
 
     <declare-styleable name="XRecyclerView">
         <attr name="android:orientation" tools:ignore="ResourceName"/>
@@ -32,21 +25,6 @@
         <attr name="tvOptimizeLayout" format="boolean"/>
     </declare-styleable>
 
-    <declare-styleable name="TvRecyclerView3">
-        <attr name="android:orientation" tools:ignore="ResourceName"/>
-        <attr name="tv_layoutManager" format="string"/>
-        <attr name="tv_numColumns" format="integer"/>
-        <attr name="tv_numRows" format="integer"/>
-        <attr name="tv_laneCountsStr" format="string"/>
-        <attr name="tv_isIntelligentScroll" format="boolean"/>
-        <attr name="tv_selectedItemOffsetStart" format="dimension"/>
-        <attr name="tv_selectedItemOffsetEnd" format="dimension"/>
-        <attr name="tv_selectedItemIsCentered" format="boolean"/>
-        <attr name="tv_isMenu" format="boolean"/>
-        <attr name="tv_isSelectFirstVisiblePosition" format="boolean"/>
-        <attr name="tv_loadMoreBeforehandCount" format="integer"/>
-        <attr name="tv_optimizeLayout" format="boolean"/>
-    </declare-styleable>
 
     <declare-styleable name="BaseFlyingFrameView">
         <attr name="flyingDuration" format="integer" />
@@ -65,10 +43,4 @@
         <attr name="flyingDrawable" format="reference|color" />
     </declare-styleable>
 
-    <declare-styleable name="FlowListHorScrollView">
-        <attr name="horizontalSpace" format="dimension|reference" />
-    </declare-styleable>
-    <declare-styleable name="FlowScrollView">
-        <attr name="center_offset" format="dimension|reference" />
-    </declare-styleable>
 </resources>

@@ -22,7 +22,7 @@ import cn.fengmang.libui.R;
 
 public class FMRecyclerView extends RecyclerView implements View.OnClickListener, View.OnLongClickListener {
 
-    private final static String TAG = "TvRecycler";
+    private final static String TAG = "FMRecyclerView";
 
 
     protected int mCurrentFocusPosition;
@@ -54,24 +54,16 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         super(context, attrs, defStyle);
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FMRecyclerView);
-            int left = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceLeft, 0);
-            int top = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceTop, 0);
-            int right = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceRight, 0);
-            int bottom = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceBottom, 0);
+            int left = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceHorizontal, 0);
+            int top = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceVertical, 0);
+            int right = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceHorizontal, 0);
+            int bottom = a.getDimensionPixelSize(R.styleable.FMRecyclerView_itemSpaceVertical, 0);
             // padding值只能通过recyclerPadding设置
+            paddingLeft = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingHorizontal, 0);
+            paddingRight = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingHorizontal, 0);
+            paddingTop = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingVertical, 0);
+            paddingBottom = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingVertical, 0);
 
-            paddingLeft = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingLeft, 0);
-            paddingRight = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingRight, 0);
-            paddingTop = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingTop, 0);
-            paddingBottom = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingBottom, 0);
-
-            int padding = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPadding, 0);
-            if (padding != 0) {
-                paddingLeft = padding;
-                paddingRight = padding;
-                paddingTop = padding;
-                paddingBottom = padding;
-            }
             a.recycle();
             if (left != 0 || top != 0 || right != 0 || bottom != 0) {
                 setItemSpaces(left, top, right, bottom);
@@ -92,7 +84,6 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         setClickable(false);
         setFocusable(true);
         setFocusableInTouchMode(true);
-//        initClickEvent();
         initItemFocusEvent();
     }
 
@@ -103,6 +94,9 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
                 if (null != onItemListener && view != null) {
                     if (hasFocus) {
                         mCurrentFocusPosition = getChildLayoutPosition(view);
+                        int childAdapterPosition = getChildAdapterPosition(view);
+                        ELog.d("mCurrentFocusPosition:" + mCurrentFocusPosition);
+                        ELog.d("childAdapterPosition:" + childAdapterPosition);
                         onItemListener.onItemSelected(FMRecyclerView.this, view, getChildLayoutPosition(view));
                         ELog.d(TAG, "onFocusChange:" + mCurrentFocusPosition);
                     } else {
@@ -244,6 +238,28 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         }
         postInvalidate();
         return false;
+    }
+
+    public int getFirstVisiblePosition() {
+        if (getChildCount() == 0)
+            return 0;
+        else
+            return getChildAdapterPosition(getChildAt(0));
+    }
+
+    public int getLastVisiblePosition() {
+        final int childCount = getChildCount();
+        if (childCount == 0)
+            return 0;
+        else
+            return getChildAdapterPosition(getChildAt(childCount - 1));
+    }
+
+    public int getItemCount() {
+        if (null != getAdapter()) {
+            return getAdapter().getItemCount();
+        }
+        return 0;
     }
 
     @Override

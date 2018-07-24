@@ -27,7 +27,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FMainActivity">
+        <activity android:name="cn.fengmang.file.FMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,9 +36,16 @@
         </activity>
         <activity
             android:name=".FMFileActivity"
+            android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".FileTestActivity"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".FMAppActivity" android:launchMode="singleTop" />
+
+
+        <meta-data
+            android:name="com.qihoo360.plugin.name"
+            android:value="fmfile" />
     </application>
 
 </manifest>

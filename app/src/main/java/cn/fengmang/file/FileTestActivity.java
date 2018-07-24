@@ -34,13 +34,13 @@ public class FileTestActivity extends FMBaseTitleActivity {
     private int mCurrentSelectPosition;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_test);
     }
 
     @Override
-    protected void initUI() {
+    public void initUI() {
         super.initUI();
         mRecyclerView = (FRecyclerView) findViewById(R.id.fileList);
         mTvSelectFileCount = (TextView) findViewById(R.id.selectFileCount);

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.fengmang.file.FMainActivity">
+
+    <include layout="@layout/fm_bg_layout" />
+
+    <include layout="@layout/fm_loading_layout" />
+
+    <include layout="@layout/fm_title_layout" />
+
+
+    <cn.fengmang.file.widget.StatusView
+        android:id="@+id/statusView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/w48"
+        android:layout_marginTop="@dimen/h48"
+        android:focusable="true"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <cn.fengmang.libui.recycler.FMRecyclerView
+        android:id="@+id/appList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/h36"
+        android:layout_marginTop="@dimen/h108"
+        android:nextFocusUp="@+id/statusView"
+        app:itemSpaceHorizontal="@dimen/w64"
+        app:itemSpaceVertical="@dimen/h8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/statusView"
+        app:recyclerPaddingHorizontal="@dimen/w72"
+        app:recyclerPaddingVertical="@dimen/h22" />
+
+
+    <TextView
+        android:id="@+id/tvFooter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/h18"
+        android:layout_marginRight="@dimen/w48"
+        android:text="长按OK键卸载选中用户应用"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

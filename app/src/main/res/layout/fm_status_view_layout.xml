@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <cn.fengmang.file.widget.StatusItemView
+        android:id="@+id/statusItemUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/w3"
+        android:clickable="true"
+        android:focusable="true"
+        app:itemText="用户应用" />
+
+    <cn.fengmang.file.widget.StatusItemView
+        android:id="@+id/statusItemSystem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/w3"
+        android:clickable="true"
+        android:focusable="true"
+        app:itemText="系统应用" />
+</merge>

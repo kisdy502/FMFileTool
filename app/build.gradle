@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'replugin-plugin-gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -18,9 +19,22 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+repluginPluginConfig {
+    pluginName = "fmfile"
+    hostApplicationId = "cn.fengmang.file"
+    hostAppLauncherActivity = "cn.fengmang.file.FMainActivity"
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     api 'com.google.code.gson:gson:2.8.0'
     implementation project(':libui')
+    compile 'com.qihoo360.replugin:replugin-plugin-lib:2.2.4'
 }

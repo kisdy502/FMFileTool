@@ -28,7 +28,7 @@ public class PackageUtils {
 
     private final static String TAG = "PackageUtils";
 
-    public static X509Certificate getPackageX509Certificate(Context context, String packageName) {
+    public static X509Certificate getPackageX509Certificate(Context context, final String packageName) {
         PackageManager pm = context.getPackageManager();
         int flags = PackageManager.GET_SIGNATURES;
         PackageInfo packageInfo = null;
@@ -57,12 +57,13 @@ public class PackageUtils {
         return null;
     }
 
-    public static String getFingerprintMd5(String packageName, Context context) {
+    public static String getFingerprintMd5(final String packageName, Context context) {
         X509Certificate cf = getPackageX509Certificate(context, packageName);
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] publicKey = md.digest(cf.getEncoded());
             String hex = byte2HexFormatted(publicKey);
+            return hex;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (CertificateEncodingException e) {
@@ -71,7 +72,7 @@ public class PackageUtils {
         return null;
     }
 
-    public static String getFingerprintSha1(String packageName, Context context) {
+    public static String getFingerprintSha1(final String packageName, Context context) {
         X509Certificate cf = getPackageX509Certificate(context, packageName);
         try {
             MessageDigest md = MessageDigest.getInstance("SHA1");
@@ -86,7 +87,7 @@ public class PackageUtils {
         return null;
     }
 
-    public static int getVersionCode(Context context, @NonNull String packageName) {
+    public static int getVersionCode(Context context, @NonNull final String packageName) {
         try {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
@@ -98,7 +99,7 @@ public class PackageUtils {
         }
     }
 
-    public static String getVersionName(Context context, @NonNull String packageName) {
+    public static String getVersionName(Context context, @NonNull final String packageName) {
         try {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(packageName,

@@ -15,12 +15,12 @@ public abstract class FMBaseTitleActivity extends FMBaseActivity {
     private TextView subTitle;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    protected void initUI() {
+    public void initUI() {
         super.initUI();
         mainTitle = (TextView) findViewById(R.id.mainTitle);
         subTitle = (TextView) findViewById(R.id.subTitle);

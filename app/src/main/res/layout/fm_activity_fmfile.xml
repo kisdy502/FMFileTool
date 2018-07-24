@@ -23,12 +23,12 @@
         android:layout_marginLeft="@dimen/w160"
         android:layout_marginRight="@dimen/w160"
         android:layout_marginTop="@dimen/h130"
-        app:itemSpaceTop="@dimen/h6"
-        app:itemSpaceBottom="@dimen/h6"
-        app:recyclerPadding="@dimen/w6"
+        app:itemSpaceVertical="@dimen/h6"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:recyclerPaddingHorizontal="@dimen/w6"
+        app:recyclerPaddingVertical="@dimen/w6" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/selectFileName"
-            android:layout_width="@dimen/h560"
+            android:layout_width="@dimen/h1080"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:marqueeRepeatLimit="marquee_forever"
