@@ -1,12 +1,15 @@
 package cn.fengmang.file;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -29,6 +32,7 @@ import cn.fengmang.file.dialog.FilePropertyDialogFragment;
 import cn.fengmang.file.dialog.FileRenameDialogFragment;
 import cn.fengmang.file.dialog.OnOptClickListener;
 import cn.fengmang.file.prefs.FileSettingSharePref;
+import cn.fengmang.file.utils.ExtFileHelper;
 import cn.fengmang.file.utils.FileClipboard;
 import cn.fengmang.file.utils.FileIntentHelper;
 import cn.fengmang.file.utils.FileOptHelper;
@@ -77,7 +81,10 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
         super.onCreate(savedInstanceState);
         mSortType = FileSettingSharePref.getInstance().getFileSortType(this, FileOptHelper.SORT_BYNAME);
         mViewtMode = FileSettingSharePref.getInstance().getViewMode(this, FileOptHelper.VIEW_MODE_LIST);
+        initReceiver();
         setContentView(R.layout.fm_activity_fmfile);
+        getExtPathList();
+
     }
 
     @Override
@@ -100,6 +107,24 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
         mVisitHostiry = new Stack<>();
         initRecyclerView();
         initFileList(new File(mCurrentDir));
+    }
+
+    private void initReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_MEDIA_EJECT);              //sd插入
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);            //sd可用
+        filter.addAction(Intent.ACTION_MEDIA_REMOVED);            //sd拔出
+        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);          //sd卸载
+
+        filter.addDataScheme("file");
+        filter.setPriority(1000);
+        registerReceiver(receiver, filter);
+
+        IntentFilter filter_usb = new IntentFilter();
+        filter_usb.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);  //usb插入
+        filter_usb.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);  //usb拔出
+        filter_usb.setPriority(1000);
+        registerReceiver(receiver, filter_usb);
     }
 
 
@@ -557,6 +582,7 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
     public void onDestroy() {
         FileSettingSharePref.getInstance().setFileSortType(this, mSortType);
         FileSettingSharePref.getInstance().setViewMode(this, mViewtMode);
+        unregisterReceiver(receiver);
         super.onDestroy();
     }
 
@@ -564,4 +590,31 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
     public void onCancelOpt(View view, String cmd) {
 
     }
+
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
+                ELog.i(TAG, "===================外置sd开拔出");
+            } else if (action.equals(Intent.ACTION_MEDIA_UNMOUNTED)) {
+                ELog.i(TAG, "===================SD卡被卸载");
+            } else if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
+                ELog.i(TAG, "===================外置sd开插入");
+                getExtPathList();
+            } else if (action.equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
+                ELog.i(TAG, "===================U盘插入");
+            } else if (action.equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
+                ELog.i(TAG, "===================U盘被拔出");
+            }
+        }
+    };
+
+    private void getExtPathList() {
+        List<String> pathList = ExtFileHelper.getStoragePath(this, ExtFileHelper.KEY_SD);
+
+    }
+
+
 }

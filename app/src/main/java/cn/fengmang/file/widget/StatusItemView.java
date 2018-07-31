@@ -41,7 +41,7 @@ public class StatusItemView extends RelativeLayout {
 
     private void init() {
         inflate(getContext(), R.layout.fm_status_item_view_layout, this);
-        setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
+        setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);  //重要
         mTvStatus = findViewById(R.id.tvStatus);
         mImgStatus = findViewById(R.id.imgSelected);
         if (text != null) {

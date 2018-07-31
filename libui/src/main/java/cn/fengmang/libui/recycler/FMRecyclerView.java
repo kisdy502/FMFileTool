@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
 import cn.fengmang.baselib.ELog;
@@ -69,9 +70,15 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
                 setItemSpaces(left, top, right, bottom);
             }
         }
-
         init();
     }
+
+    public void setSpaceVerticalAndHorizontal(int vertical, int horizontal) {
+        if (vertical != 0 || horizontal != 0) {
+            setItemSpaces(horizontal, vertical, horizontal, vertical);
+        }
+    }
+
 
     private void init() {
         setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
@@ -265,6 +272,7 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     public void smoothScrollBy(int dx, int dy, Interpolator interpolator) {
         setScrollValue(dx, dy);
+        ELog.e("dx:" + dx + ",dy:" + dy);
         super.smoothScrollBy(dx, dy, interpolator);
     }
 

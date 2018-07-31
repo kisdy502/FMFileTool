@@ -38,10 +38,22 @@
             android:name=".FMFileActivity"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".FileTestActivity"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".FMAppActivity" android:launchMode="singleTop" />
+        <activity
+            android:name=".FileTestActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".FMAppActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".FMVideoHomeActivity"
+            android:launchMode="singleTop" />
 
+
+        <receiver android:name=".receiver.WifiConnectChangedReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.qihoo360.plugin.name"

@@ -11,6 +11,7 @@ import java.util.Date;
 public class DateUtil {
     public final static String FORMAT_MMDD = "MMDD";
     public final static String FORMAT_MMDDHH = "MMDDHH";
+    public final static String FORMAT_DDHHMMSS = "ddHHmmss";
     public final static String FORMAT_YYYYMMDD = "yyyy-MM-dd";
     public final static String FORMAT_YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
@@ -73,7 +74,6 @@ public class DateUtil {
     }
 
     public static Date timestampToDate(long stamp) {
-        String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(stamp);
         return date;

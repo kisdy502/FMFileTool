@@ -3,6 +3,7 @@ package cn.fengmang.file.utils;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Debug;
+import android.os.StatFs;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -15,6 +16,9 @@ import cn.fengmang.baselib.ELog;
  */
 
 public class MemHelper {
+
+
+    //运行内存大小
     public static void printfMemInfo(Context context) {
         ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
@@ -52,7 +56,7 @@ public class MemHelper {
     }
 
 
-    public static  void printfTvInfo(Context context) {
+    public static void printfTvInfo(Context context) {
         DisplayMetrics metric = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(metric);
@@ -66,11 +70,23 @@ public class MemHelper {
         int densityDpi = metric.densityDpi;
         StringBuilder sb = new StringBuilder();
         sb.append("System Info\n").append("机顶盒型号: ").append(android.os.Build.MODEL).append("\n")
-                .append("SDK版本:").append(android.os.Build.VERSION.SDK).append("\n")
+                .append("SDK版本:").append(android.os.Build.VERSION.SDK_INT).append("\n")
                 .append("系统版本:").append(android.os.Build.VERSION.RELEASE).append("\n")
                 .append("屏幕宽度").append(width).append("px\n")
                 .append("屏幕高度").append(height).append("px\n")
                 .append("屏幕密度").append(densityDpi).append("DPI\n");
         ELog.d(sb.toString());
+    }
+
+    public static void getExtInfo(String path) {
+        final StatFs statFs = new StatFs(path);
+        long totalCount = statFs.getBlockCount();                //总共的block数
+        long availableCount = statFs.getAvailableBlocks();       //获取可用的block数
+        long size = statFs.getBlockSize();                       //每格所占的大小，一般是4KB==
+        long availROMSize = availableCount * size;               //可用存储大小
+        long totalROMSize = totalCount * size;                   //总大小
+        ELog.d(path + ",可用内存大小" + FileOptHelper.convertStorage(availROMSize) + ",总内存" + FileOptHelper.convertStorage(totalROMSize));
+        ;
+
     }
 }

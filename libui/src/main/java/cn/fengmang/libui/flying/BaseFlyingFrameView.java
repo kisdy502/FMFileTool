@@ -92,11 +92,96 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
             return;
         }
         tagetView.animate().scaleX(scaleX).scaleY(scaleY).setDuration(mAnimDuration).start();
+
+    }
+
+    private void buildMoveAnimation2(@NonNull View tagetView, final float scaleX, final float scaleY) {
+        if (tagetView == null)
+            return;
+        int[] position = new int[2];
+        tagetView.getLocationInWindow(position);
+        ELog.d(String.format("tagetView x:%d,y%d", position[0], position[1]));
+        final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
+        final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
+        final int ofsetWidth = (int) (tagetView.getMeasuredWidth() * (scaleX - 1f) + paddingWidth);
+        final int ofsetHeight = (int) (tagetView.getMeasuredHeight() * (scaleY - 1f) + paddingHeight);
+        ELog.d(String.format("tagetView ofsetWidth:%d,ofsetHeight%d", ofsetWidth, ofsetHeight));
+
+        final Rect fromRect = findLocationWithView2(this);
+
+        final Rect toRect = new Rect(position[0], position[1], 0, 0);
+
+        View child = tagetView;
+        while (child != null && child instanceof View) {
+            ViewParent parent = child.getParent();
+            if (parent == null || (!(parent instanceof View))) {
+                break;
+            }
+            if (parent instanceof RecyclerView) {
+                final RecyclerView rv = (RecyclerView) tagetView.getParent();
+                Object tag = rv.getTag();
+                if (null != tag && tag instanceof Point) {
+                    Point point = (Point) tag;
+                    ELog.d(String.format("Point x:%d,y:%d", point.x, point.y));
+                    toRect.offset(rv.getLayoutManager().canScrollHorizontally() ? -point.x : 0,
+                            rv.getLayoutManager().canScrollVertically() ? -point.y : 0);
+                    ELog.d(String.format("rv left:%d,top:%d", rv.getLeft(), rv.getTop()));
+                    toRect.offset(rv.getLeft(), rv.getTop());
+                }
+            }
+            child = (View) child.getParent();
+        }
+        toRect.right = toRect.left + tagetView.getMeasuredWidth();
+        toRect.bottom = toRect.top + tagetView.getMeasuredHeight();
+        toRect.inset(-ofsetWidth / 2, -ofsetHeight / 2);
+        ELog.d("toRect:" + toRect.toString());
+
+
+        final int newWidth = toRect.width();
+        final int newHeight = toRect.height();
+        final int newX = toRect.left - fromRect.left;
+        final int newY = toRect.top - fromRect.top;
+
+        final List<Animator> together = new ArrayList<>();
+        final List<Animator> appendTogether = getTogetherAnimators(newX, newY, newWidth, newHeight, scaleX, scaleY);
+        if (null != appendTogether && !appendTogether.isEmpty()) {
+            together.addAll(appendTogether);
+        }
+
+        together.add(getTranslationXAnimator(newX));
+        together.add(getTranslationYAnimator(newY));
+        together.add(getWidthAnimator(newWidth));
+        together.add(getHeightAnimator(newHeight));
+
+        final List<Animator> sequentially = new ArrayList<>();
+        final List<Animator> appendSequentially = getSequentiallyAnimators(newX, newY, newWidth, newHeight, scaleX, scaleY);
+        if (null != appendSequentially && !appendSequentially.isEmpty()) {
+            sequentially.addAll(appendSequentially);
+        }
+
+        mAnimatorSet = new AnimatorSet();
+        mAnimatorSet.setInterpolator(new DecelerateInterpolator(1));
+        mAnimatorSet.playTogether(together);
+        mAnimatorSet.playSequentially(sequentially);
+
     }
 
     private void buildMoveAnimation(@NonNull View tagetView, final float scaleX, final float scaleY) {
         if (tagetView == null)
             return;
+        int[] position = new int[2];
+        tagetView.getLocationOnScreen(position);
+        ELog.d(String.format("tagetView x:%d,y%d", position[0], position[1]));
+
+        int[] position2 = new int[2];
+        tagetView.getLocationInWindow(position2);
+        ELog.d(String.format("tagetView x:%d,y%d", position2[0], position2[1]));
+
+        Rect viewRect = new Rect();
+        tagetView.getGlobalVisibleRect(viewRect);
+        ELog.d(viewRect.toString());
+
+
         final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
         final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
         ELog.v(TAG, String.format("paddingWidth:%f,paddingHeight:%f", paddingWidth, paddingHeight));
@@ -104,23 +189,28 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         final int ofsetHeight = (int) (tagetView.getMeasuredHeight() * (scaleY - 1f) + paddingHeight);
         final Rect fromRect = findLocationWithView2(this);
         final Rect toRect = findLocationWithView2(tagetView);
+        ELog.d("toRect:" + toRect.toString());
         View child = tagetView;
-        while (child != null && child.getParent() != null && child instanceof View && child.getParent() instanceof View) {
+        while (child != null) {
             ViewParent parent = child.getParent();
+            if (parent == null || (!(parent instanceof View))) {
+                break;
+            }
             if (parent instanceof RecyclerView) {
-                final RecyclerView rv = (RecyclerView) tagetView.getParent();
-//                registerScrollListener(rv);
+                final RecyclerView rv = (RecyclerView) parent;
                 Object tag = rv.getTag();
                 if (null != tag && tag instanceof Point) {
                     Point point = (Point) tag;
                     toRect.offset(rv.getLayoutManager().canScrollHorizontally() ? -point.x : 0,
                             rv.getLayoutManager().canScrollVertically() ? -point.y : 0);
                 }
+                ELog.e(rv.getClass().getName() + "left:" + rv.getLeft() + ",top" + rv.getTop());
                 toRect.offset(rv.getLeft(), rv.getTop());
             } else {
                 View parentView = (View) parent;
                 int dx = parentView.getLeft() + parentView.getScrollX();
                 int dy = parentView.getTop() + parentView.getScrollY();
+                ELog.e(parentView.getClass().getName() + "View left:" + parentView.getLeft() + ",top" + parentView.getTop());
                 toRect.offset(dx, dy);
             }
             child = (View) child.getParent();

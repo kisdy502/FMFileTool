@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
+
     repositories {
         google()
         jcenter()
@@ -33,4 +33,5 @@ ext {
     minSdkVersion = 16
     targetSdkVersion = 26
     supportVersion = "26.0.2"
+    androidasync = "com.koushikdutta.async:androidasync:2.+"
 }

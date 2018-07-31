@@ -1,6 +1,7 @@
 package cn.fengmang.file.utils;
 
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -16,7 +17,7 @@ import cn.fengmang.baselib.ELog;
 
 public class SpannableUtils {
 
-    public static SpannableStringBuilder matcherSearchTitle(@ColorInt int color, String text, String keyword) {
+    public static SpannableStringBuilder matcherSearchTitle(@ColorInt int color, @NonNull String text, @NonNull String keyword) {
         SpannableStringBuilder s = new SpannableStringBuilder(text);
         Pattern p = Pattern.compile(keyword);
         Matcher m = p.matcher(s);

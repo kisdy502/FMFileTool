@@ -1,1 +1,1 @@
-include ':app', ':libui', ':baselib'
+include ':app', ':libui', ':baselib', ':libmini', ':AndroidAsync'

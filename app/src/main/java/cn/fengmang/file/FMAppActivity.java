@@ -103,7 +103,7 @@ public class FMAppActivity extends FMBaseTitleActivity implements OnItemClickLis
     }
 
     private void initData() {
-        mAppList = AppHelper.getAppInfoList(this, mStatus);
+        mAppList = AppHelper.getAppInfoList(this, mStatus == StatusView.STATUS_SYSTEM);
         V7LinearLayoutManager layoutManager = new V7LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mAdapter = new AppListAdapter(mAppList, this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -112,7 +112,7 @@ public class FMAppActivity extends FMBaseTitleActivity implements OnItemClickLis
     }
 
     private void refreshData() {
-        mAppList = AppHelper.getAppInfoList(this, mStatus);
+        mAppList = AppHelper.getAppInfoList(this, mStatus == StatusView.STATUS_SYSTEM);
         mAdapter = new AppListAdapter(mAppList, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();

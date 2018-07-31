@@ -40,7 +40,7 @@ public class StatusView extends LinearLayout implements View.OnClickListener {
     private void init() {
         setOrientation(HORIZONTAL);
         inflate(getContext(), R.layout.fm_status_view_layout, this);
-        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);     //重要
         onFocusChangeListener = new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

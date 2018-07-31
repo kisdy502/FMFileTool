@@ -20,46 +20,26 @@ import cn.fengmang.file.bean.AppInfo;
 
 public class AppHelper {
 
-    public static List<AppInfo> getUserAppList(Context context) {
-        List<PackageInfo> allList = getAllApkList(context);
-        PackageInfo packageInfo;
-        List<AppInfo> appInfoList = new ArrayList<>();
-        for (int i = 0, size = allList.size(); i < size; i++) {
-            packageInfo = allList.get(i);
-            if (((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0)) {
-                appInfoList.add(new AppInfo(packageInfo));
-            }
-        }
-        return appInfoList;
-    }
 
     public static List<PackageInfo> getAllApkList(Context context) {
         PackageManager pm = context.getPackageManager(); // 获得PackageManager对象
         List<PackageInfo> packs = pm.getInstalledPackages(0);
         return packs;
-
     }
 
-    public static List<AppInfo> getAppInfoList(Context context, int flag) {
+    public static List<AppInfo> getAppInfoList(Context context, boolean isSystem) {
+        int flag;
+        if (isSystem) {
+            flag = 1;
+        } else {
+            flag = 0;
+        }
         List<PackageInfo> allList = getAllApkList(context);
         PackageInfo packageInfo;
         List<AppInfo> appInfoList = new ArrayList<>();
         for (int i = 0, size = allList.size(); i < size; i++) {
             packageInfo = allList.get(i);
             if (((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == flag)) {
-                appInfoList.add(new AppInfo(packageInfo));
-            }
-        }
-        return appInfoList;
-    }
-
-    public static List<AppInfo> getSystemAppList(Context context) {
-        List<PackageInfo> allList = getAllApkList(context);
-        PackageInfo packageInfo;
-        List<AppInfo> appInfoList = new ArrayList<>();
-        for (int i = 0, size = allList.size(); i < size; i++) {
-            packageInfo = allList.get(i);
-            if (((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0)) {
                 appInfoList.add(new AppInfo(packageInfo));
             }
         }

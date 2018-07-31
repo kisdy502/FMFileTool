@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/w240"
+    android:layout_height="@dimen/h424"
+    android:background="#CDCDCD"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/img_video_poster"
+        android:layout_width="@dimen/w240"
+        android:layout_height="@dimen/h424" />
+
+    <TextView
+        android:id="@+id/videoName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/h6"
+        android:layout_centerHorizontal="true"
+        android:text="开封府"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w30" />
+
+    <TextView
+        android:id="@+id/videoScore"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/w6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="7.9分"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w24" />
+
+
+</RelativeLayout>

@@ -3,6 +3,7 @@ package cn.fengmang.file;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +16,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.fengmang.baselib.ELog;
 import cn.fengmang.file.utils.MemHelper;
 import cn.fengmang.file.utils.PermissionsUtil;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.libui.recycler.FMRecyclerView;
 import cn.fengmang.libui.recycler.OnItemClickListener;
 import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
+import cn.fm.libmini.test.FileUpload;
 
 public class FMainActivity extends FMBaseActivity {
 
@@ -40,7 +43,7 @@ public class FMainActivity extends FMBaseActivity {
     }
 
     private MenuAdapter mAdapter;
-
+    private TimeCount timeCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,13 @@ public class FMainActivity extends FMBaseActivity {
         mFlyingView = DrawableFlyingFrameView.build(this);
         mFlyingView.setFlyingDrawable(getResources().getDrawable(R.drawable.hover_item));
         MemHelper.printfTvInfo(this);
+//        timeCount = new TimeCount(10000, 10000);
+//        timeCount.start();
+//        start = System.currentTimeMillis();
+
     }
+
+    long start;
 
 
     private void initView() {
@@ -105,6 +114,11 @@ public class FMainActivity extends FMBaseActivity {
                     startActivity(new Intent(FMainActivity.this, FMFileActivity.class));
                 } else if (position == 1) {
                     startActivity(new Intent(FMainActivity.this, FMAppActivity.class));
+                } else if (position == 2) {
+                    FileUpload fileUpload = new FileUpload();
+                    fileUpload.getBoundary("Content-Type: multipart/form-data;boundary=7da32c172e0acc");
+                } else if (position == 3) {
+                    startActivity(new Intent(FMainActivity.this, FMVideoHomeActivity.class));
                 }
 
             }
@@ -152,6 +166,14 @@ public class FMainActivity extends FMBaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timeCount != null) {
+            timeCount.cancel();
+        }
+    }
+
     static class MenuItem {
 
         public MenuItem(String data, int itemType) {
@@ -174,6 +196,26 @@ public class FMainActivity extends FMBaseActivity {
         }
     }
 
+
+    class TimeCount extends CountDownTimer {
+
+        public TimeCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            ELog.d("millisUntilFinished:" + millisUntilFinished);
+        }
+
+        @Override
+        public void onFinish() {
+
+            long end = System.currentTimeMillis();
+            long count = end - start;
+            ELog.d("onFinish:" + count);
+        }
+    }
 
 
 }

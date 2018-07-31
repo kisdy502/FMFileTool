@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/w180"
+    android:layout_height="@dimen/h180"
+    android:background="#CDCDCD"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/img_performer"
+        android:layout_width="@dimen/w144"
+        android:layout_height="@dimen/h144"
+        android:layout_marginTop="@dimen/h6"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/performerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="周雨薇"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w28" />
+
+</RelativeLayout>

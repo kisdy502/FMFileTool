@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/w160"
+    android:layout_height="@dimen/h48"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/titleSelectTag"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h2"
+        android:background="@color/light_blue"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/titleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="美味"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w32" />
+
+</RelativeLayout>
