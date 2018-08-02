@@ -98,7 +98,6 @@ public class NetUtils {
 
 
     public static String getIpAddress(Context context) {
-
         String ip = null;
         if (isNetworkAvailable(context)) {
             if (isCablePlugin()) {
@@ -124,7 +123,7 @@ public class NetUtils {
                 return intToIp(wifiInfo.getIpAddress());
             }
         }
-        return null;
+        return "0.0.0.0";
     }
 
 

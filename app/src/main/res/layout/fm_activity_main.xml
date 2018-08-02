@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipChildren="false"
     tools:context="cn.fengmang.file.FMainActivity">
 
     <include layout="@layout/fm_bg_layout" />

@@ -8,6 +8,7 @@ import android.net.wifi.WifiManager;
 import android.os.Parcelable;
 
 import cn.fengmang.baselib.ELog;
+import cn.fengmang.file.widget.FMToast;
 
 /**
  * Created by Administrator on 2018/7/29.
@@ -22,7 +23,15 @@ public class WifiConnectChangedReceiver extends BroadcastReceiver {
                     .getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
             if (null != parcelableExtra) {
                 NetworkInfo networkInfo = (NetworkInfo) parcelableExtra;
-                ELog.d("networkInfo:" + networkInfo.getState());
+                if (networkInfo != null) {
+                    String text = "state:" + networkInfo.getState() + ",isConnected:" + networkInfo.isConnected() + ",isAvailable:" + networkInfo.isAvailable();
+                    ELog.e(text);
+                    new FMToast(context).text(text).show();
+                } else {
+                    new FMToast(context).text("networkInfo is null").show();
+                }
+            } else {
+                new FMToast(context).text("parcelableExtra is null").show();
             }
         }
     }

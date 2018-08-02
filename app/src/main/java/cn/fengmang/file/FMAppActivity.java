@@ -116,6 +116,7 @@ public class FMAppActivity extends FMBaseTitleActivity implements OnItemClickLis
         mAdapter = new AppListAdapter(mAppList, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+        mRecyclerView.requestFocus();
     }
 
 

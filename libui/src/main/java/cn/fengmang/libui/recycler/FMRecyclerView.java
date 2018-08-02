@@ -43,6 +43,10 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     private boolean mSelectedItemCentered = true;
     private int mSelectedItemOffsetStart, mSelectedItemOffsetEnd;
 
+    private boolean mIsMenu;
+    private boolean mIsSelectFirstVisiblePosition;
+
+
     public FMRecyclerView(Context context) {
         this(context, null);
     }
@@ -65,6 +69,8 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
             paddingTop = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingVertical, 0);
             paddingBottom = a.getDimensionPixelSize(R.styleable.FMRecyclerView_recyclerPaddingVertical, 0);
 
+            mIsMenu = a.getBoolean(R.styleable.FMRecyclerView_tvIsMenu, false);
+            mIsSelectFirstVisiblePosition = a.getBoolean(R.styleable.FMRecyclerView_tvIsSelectFirstVisiblePosition, false);
             a.recycle();
             if (left != 0 || top != 0 || right != 0 || bottom != 0) {
                 setItemSpaces(left, top, right, bottom);
@@ -81,7 +87,7 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
 
 
     private void init() {
-        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
+        setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
         setChildrenDrawingOrderEnabled(true);
         setWillNotDraw(true);
         setHasFixedSize(false);
@@ -97,28 +103,82 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     private void initItemFocusEvent() {
         mOnFocusChangeListener = new OnFocusChangeListener() {
             @Override
-            public void onFocusChange(final View view, boolean hasFocus) {
-                if (null != onItemListener && view != null) {
+            public void onFocusChange(final View itemView, boolean hasFocus) {
+                if (null != onItemListener && itemView != null) {
                     if (hasFocus) {
-                        mCurrentFocusPosition = getChildLayoutPosition(view);
-                        int childAdapterPosition = getChildAdapterPosition(view);
+                        mCurrentFocusPosition = getChildLayoutPosition(itemView);
+                        if (mIsMenu && itemView.isActivated()) {
+                            itemView.setActivated(false);
+                        }
+                        int childAdapterPosition = getChildAdapterPosition(itemView);
                         ELog.d("mCurrentFocusPosition:" + mCurrentFocusPosition);
                         ELog.d("childAdapterPosition:" + childAdapterPosition);
-                        onItemListener.onItemSelected(FMRecyclerView.this, view, getChildLayoutPosition(view));
+                        onItemListener.onItemSelected(FMRecyclerView.this, itemView, getChildLayoutPosition(itemView));
                         ELog.d(TAG, "onFocusChange:" + mCurrentFocusPosition);
                     } else {
-                        view.postDelayed(new Runnable() {
+                        itemView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                onItemListener.onItemPreSelected(FMRecyclerView.this, view, getChildLayoutPosition(view));
+                                if (!hasFocus()) {
+                                    if (mIsMenu) {
+                                        // 解决选中后无状态表达的问题，selector中使用activated代表选中后焦点移走
+                                        itemView.setActivated(true);
+                                        onFocusChanged(false, FOCUS_DOWN, null);
+                                    }
+                                }
                             }
                         }, 9);
+                        onItemListener.onItemPreSelected(FMRecyclerView.this, itemView, getChildLayoutPosition(itemView));
                     }
                 }
             }
         };
     }
 
+    @Override
+    public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
+        ELog.i("direction..." + direction);
+        if (null == getFocusedChild()) {
+            //请求默认焦点
+            requestDefaultFocus();
+        }
+        return false;
+    }
+
+    public void requestDefaultFocus() {
+        if (mIsMenu || !mIsSelectFirstVisiblePosition) {
+            setSelection(mCurrentFocusPosition);
+        } else {
+            setSelection(getFirstVisiblePosition());
+        }
+    }
+
+    public void setSelection(int position) {
+        if (null == getAdapter() || position < 0 || position >= getItemCount()) {
+            return;
+        }
+        View view = getChildAt(position - getFirstVisiblePosition());
+        if (null != view) {
+            if (!hasFocus()) {
+                //模拟TvRecyclerView获取焦点
+                onFocusChanged(true, FOCUS_DOWN, null);
+            }
+            view.requestFocus();
+        } else {
+            ELog.e("view is null:" + position);
+        }
+    }
+
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
+        ELog.i("gainFocus=" + gainFocus + " hasFocus=" + hasFocus() + " direction=" + direction);
+        if (gainFocus) {
+            setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
+        } else {
+            setDescendantFocusability(FOCUS_BLOCK_DESCENDANTS);
+        }
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    }
 
     private void setItemSpaces(int left, int top, int right, int bottom) {
         if (mSpacesRect == null) {
@@ -173,8 +233,6 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         }
         if (child.isClickable()) {
             child.setOnClickListener(this);
-        }
-        if (child.isClickable()) {
             child.setOnLongClickListener(this);
         }
     }
@@ -365,6 +423,11 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         }
     }
 
+    @Override
+    public void setAdapter(Adapter adapter) {
+        mCurrentFocusPosition = 0;
+        super.setAdapter(adapter);
+    }
 
     @Override
     public void onClick(View itemView) {

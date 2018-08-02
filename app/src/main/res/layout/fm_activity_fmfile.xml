@@ -24,6 +24,8 @@
         android:layout_marginRight="@dimen/w160"
         android:layout_marginTop="@dimen/h130"
         app:itemSpaceVertical="@dimen/h6"
+        android:focusableInTouchMode="true"
+        app:tvIsSelectFirstVisiblePosition="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

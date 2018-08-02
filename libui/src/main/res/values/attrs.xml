@@ -5,6 +5,8 @@
         <attr name="itemSpaceHorizontal" format="dimension" />
         <attr name="recyclerPaddingVertical" format="dimension" />
         <attr name="recyclerPaddingHorizontal" format="dimension" />
+        <attr name="tvIsMenu" format="boolean"/>
+        <attr name="tvIsSelectFirstVisiblePosition" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="XRecyclerView">
@@ -19,8 +21,7 @@
         <attr name="tvVerticalSpacing" format="dimension"/>
         <attr name="tvHorizontalSpacing" format="dimension"/>
         <attr name="tvSelectedItemIsCentered" format="boolean"/>
-        <attr name="tvIsMenu" format="boolean"/>
-        <attr name="tvIsSelectFirstVisiblePosition" format="boolean"/>
+
         <attr name="tvLoadMoreBeforehandCount" format="integer"/>
         <attr name="tvOptimizeLayout" format="boolean"/>
     </declare-styleable>

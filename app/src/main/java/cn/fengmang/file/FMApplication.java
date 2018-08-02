@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.file.utils.NetUtils;
+import cn.fengmang.file.widget.FMToast;
 import cn.fm.libmini.MiniService;
 
 /**
@@ -31,6 +32,7 @@ public class FMApplication extends Application {
         CrashCollector.getInstance(this);
         ELog.d("Application onCreate");
         startService(new Intent(this, MiniService.class));
+        new FMToast(instance).text("远程安装服务器已经启动了").show();
         new Thread() {
             @Override
             public void run() {

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/imgAppIcon"
+        android:layout_width="@dimen/w144"
+        android:layout_height="@dimen/h144"
+        android:layout_marginLeft="@dimen/w28"
+        android:layout_marginRight="@dimen/w18"
+        android:layout_marginTop="@dimen/h32" />
+
+    <TextView
+        android:id="@+id/tvAppPackageName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/h24"
+        android:layout_toRightOf="@id/imgAppIcon"
+        android:text="cn.test"
+        android:layout_marginTop="@dimen/h12"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w36" />
+
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/h24"
+        android:layout_marginTop="@dimen/h16"
+        android:layout_toRightOf="@id/tvAppPackageName"
+        android:text="2.0"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w24" />
+
+    <TextView
+        android:id="@+id/tvAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAppPackageName"
+        android:layout_marginLeft="@dimen/h24"
+        android:layout_marginTop="@dimen/h8"
+        android:layout_toRightOf="@id/imgAppIcon"
+        android:text="测试Apk"
+        android:textColor="#87CEFA"
+        android:textSize="@dimen/w30" />
+
+
+    <TextView
+        android:id="@+id/tvAppSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAppPackageName"
+        android:layout_marginLeft="@dimen/h24"
+        android:layout_marginTop="@dimen/h8"
+        android:layout_toRightOf="@id/tvAppName"
+        android:text="80kb"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/w24" />
+
+
+    <TextView
+        android:id="@+id/tvAppMd5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAppName"
+        android:layout_marginLeft="@dimen/h24"
+        android:layout_marginTop="@dimen/h14"
+        android:layout_toRightOf="@id/imgAppIcon"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="@dimen/w24" />
+
+    <TextView
+        android:id="@+id/tvAppSha1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvAppMd5"
+        android:layout_marginLeft="@dimen/h24"
+        android:layout_marginTop="@dimen/h8"
+        android:layout_toRightOf="@id/imgAppIcon"
+        android:textColor="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/h12"
+        android:textSize="@dimen/w24" />
+
+    <View
+        android:background="@drawable/file_list_separator"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

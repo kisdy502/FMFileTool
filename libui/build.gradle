@@ -21,6 +21,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    api project(':baselib')
+    implementation project(':baselib')
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
+    implementation "com.android.support:support-v4:$rootProject.ext.supportVersion"
 }

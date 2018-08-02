@@ -18,12 +18,14 @@ import java.util.List;
 
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.file.utils.MemHelper;
+import cn.fengmang.file.utils.NetListenerHelper;
 import cn.fengmang.file.utils.PermissionsUtil;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.libui.recycler.FMRecyclerView;
 import cn.fengmang.libui.recycler.OnItemClickListener;
 import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 import cn.fm.libmini.test.FileUpload;
+import cn.fm.libupload.HttpUploadHelper;
 
 public class FMainActivity extends FMBaseActivity {
 
@@ -56,9 +58,8 @@ public class FMainActivity extends FMBaseActivity {
         mFlyingView = DrawableFlyingFrameView.build(this);
         mFlyingView.setFlyingDrawable(getResources().getDrawable(R.drawable.hover_item));
         MemHelper.printfTvInfo(this);
-//        timeCount = new TimeCount(10000, 10000);
-//        timeCount.start();
-//        start = System.currentTimeMillis();
+
+        NetListenerHelper.initListener(this);
 
     }
 
@@ -119,6 +120,8 @@ public class FMainActivity extends FMBaseActivity {
                     fileUpload.getBoundary("Content-Type: multipart/form-data;boundary=7da32c172e0acc");
                 } else if (position == 3) {
                     startActivity(new Intent(FMainActivity.this, FMVideoHomeActivity.class));
+                } else if (position == 4) {
+                    HttpUploadHelper.test(FMainActivity.this);
                 }
 
             }

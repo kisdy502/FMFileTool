@@ -61,7 +61,6 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
             holder.mRecyclerView.setLayoutManager(layoutManager);
             holder.mRecyclerView.setAdapter(adapter);
         }
-        holder.mRecyclerView.setBackgroundColor(R.color.colorAccent);
         holder.mRecyclerView.setOnItemFocusListener(itemFocusChangeListener);
     }
 

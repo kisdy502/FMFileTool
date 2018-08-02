@@ -198,7 +198,12 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
                             mAdapter = new FileListAdapter(mCheckStatus, mViewtMode, mFileItemList, getApplicationContext());
                             mFileRecyclerView.setAdapter(mAdapter);
                             mFileRecyclerView.setVisibility(View.VISIBLE);
-                            mFileRecyclerView.requestFocus();
+                            mFileRecyclerView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mFileRecyclerView.requestFocus();
+                                }
+                            }, 10);
                         } else {
                             mEmptyLayout.setVisibility(View.VISIBLE);
                             mTvSelectFileCount.setVisibility(View.GONE);

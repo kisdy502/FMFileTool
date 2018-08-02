@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/w160"
     android:layout_height="@dimen/h48"
+    android:background="@drawable/title_item_bg_selector"
     android:clickable="true"
     android:focusable="true">
 

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/w180"
     android:layout_height="@dimen/h180"
-    android:background="#CDCDCD"
+    android:background="@drawable/title_item_bg_selector"
     android:clickable="true"
     android:focusable="true">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_performer"
         android:layout_width="@dimen/w144"
         android:layout_height="@dimen/h144"
         android:layout_marginTop="@dimen/h6"
+        android:src="@drawable/logo"
+        app:civ_border_width="@dimen/w2"
+        app:civ_border_color="@color/colorAccent"
         android:layout_centerHorizontal="true" />
 
     <TextView

@@ -38,7 +38,7 @@ public class VideoInfoAdapter extends RecyclerView.Adapter<VideoInfoAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.tvName.setText(videoInfoList.get(position).getVideoName());
-        Glide.with(mContext).load(videoInfoList.get(position).getVideoPosterUrl()).placeholder(R.mipmap.ic_launcher).into(holder.imgVideo);
+        Glide.with(mContext).load(videoInfoList.get(position).getVideoPosterUrl()).into(holder.imgVideo);
     }
 
     @Override
