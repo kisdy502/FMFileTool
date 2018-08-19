@@ -10,6 +10,7 @@ public class VideoListBean {
 
     List<VideoInfo> videoInfoList;
     List<Performer> performerList;
+    List<HotInfo> hotInfoList;
 
     public List<VideoInfo> getVideoInfoList() {
         return videoInfoList;
@@ -25,6 +26,15 @@ public class VideoListBean {
 
     public void setPerformerList(List<Performer> performerList) {
         this.performerList = performerList;
+    }
+
+
+    public List<HotInfo> getHotInfoList() {
+        return hotInfoList;
+    }
+
+    public void setHotInfoList(List<HotInfo> hotInfoList) {
+        this.hotInfoList = hotInfoList;
     }
 
     public static class VideoInfo {

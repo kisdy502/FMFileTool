@@ -35,12 +35,11 @@ public class ColorFlyingFrameView extends BaseFlyingFrameView {
     private Paint mBorderPaint;
 
     public ColorFlyingFrameView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public ColorFlyingFrameView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public ColorFlyingFrameView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -67,12 +66,13 @@ public class ColorFlyingFrameView extends BaseFlyingFrameView {
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setMaskFilter(new BlurMaskFilter(0.5f, BlurMaskFilter.Blur.NORMAL));
 
-
-        mShadowPaint = new Paint();
-        mShadowPaint.setColor(mShadowColor);
+        if (mShadowWidth > 0) {
+            mShadowPaint = new Paint();
+            mShadowPaint.setColor(mShadowColor);
 //        mShadowPaint.setAntiAlias(true); //抗锯齿功能，会消耗较大资源，绘制图形速度会变慢
 //        mShadowPaint.setDither(true);    //抖动处理，会使绘制出来的图片颜色更加平滑和饱满，图像更加清晰
-        mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowWidth, BlurMaskFilter.Blur.OUTER));
+            mShadowPaint.setMaskFilter(new BlurMaskFilter(mShadowWidth, BlurMaskFilter.Blur.OUTER));
+        }
     }
 
     @Override
@@ -88,7 +88,9 @@ public class ColorFlyingFrameView extends BaseFlyingFrameView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        drawShadow(canvas);
+        if (mShadowPaint != null) {
+            drawShadow(canvas);
+        }
         drawBroader(canvas);
         super.onDraw(canvas);
 

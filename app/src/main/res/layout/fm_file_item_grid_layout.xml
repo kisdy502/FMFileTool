@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/w224"
-    android:layout_height="@dimen/h208"
+    android:layout_height="@dimen/h212"
     android:background="@drawable/common_item_selector"
     android:clickable="true"
     android:focusable="true">

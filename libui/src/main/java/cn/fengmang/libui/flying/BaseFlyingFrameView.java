@@ -47,10 +47,8 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
     private ObjectAnimator mTranslationYAnimator;
     private ObjectAnimator mWidthAnimator;
     private ObjectAnimator mHeightAnimator;
-    private RecyclerViewScrollListener mRecyclerViewScrollListener;
     private float mScaleX, mScaleY;
     private WeakReference<RecyclerView> mWeakRecyclerViewRef;
-
 
     public BaseFlyingFrameView(Context context) {
         this(context, null);
@@ -77,6 +75,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
     private void init() {
         setLayerType(View.LAYER_TYPE_SOFTWARE, null); //关闭硬件加速
         setVisibility(INVISIBLE);
+
     }
 
     /**
@@ -95,52 +94,57 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
 
     }
 
+    View child;
+    View parentView;
+    ViewParent parent;
 
     private void buildMoveAnimation(@NonNull View tagetView, final float scaleX, final float scaleY) {
         if (tagetView == null)
             return;
-        int[] position = new int[2];
-        tagetView.getLocationOnScreen(position);
-        ELog.v(String.format("tagetView x:%d,y%d", position[0], position[1]));
+//        int[] position = new int[2];
+//        tagetView.getLocationOnScreen(position);
+//        ELog.v(String.format("tagetView x:%d,y%d", position[0], position[1]));
 
-        int[] position2 = new int[2];
-        tagetView.getLocationInWindow(position2);
-        ELog.v(String.format("tagetView x:%d,y%d", position2[0], position2[1]));
+//        int[] position2 = new int[2];
+//        tagetView.getLocationInWindow(position2);
+//        ELog.v(String.format("tagetView x:%d,y%d", position2[0], position2[1]));
 
-        Rect viewRect = new Rect();
-        tagetView.getGlobalVisibleRect(viewRect);
-        ELog.v(viewRect.toString());
-
+//        Rect viewRect = new Rect();
+//        tagetView.getGlobalVisibleRect(viewRect);
+//        ELog.v(viewRect.toString());
 
         final float paddingWidth = mPaddingRectF.left + mPaddingRectF.right + mPaddingOfsetRectF.left + mPaddingOfsetRectF.right;
         final float paddingHeight = mPaddingRectF.top + mPaddingRectF.bottom + mPaddingOfsetRectF.top + mPaddingOfsetRectF.bottom;
-        ELog.v(TAG, String.format("paddingWidth:%f,paddingHeight:%f", paddingWidth, paddingHeight));
+//        ELog.i(String.format("paddingWidth:%f,paddingHeight:%f", paddingWidth, paddingHeight));
         final int ofsetWidth = (int) (tagetView.getMeasuredWidth() * (scaleX - 1f) + paddingWidth);
         final int ofsetHeight = (int) (tagetView.getMeasuredHeight() * (scaleY - 1f) + paddingHeight);
         final Rect fromRect = findLocationWithView2(this);
         final Rect toRect = findLocationWithView2(tagetView);
-        ELog.v("toRect:" + toRect.toString());
-        View child = tagetView;
+//        ELog.v("toRect:" + toRect.toString());
+        child = tagetView;
         while (child != null) {
-            ViewParent parent = child.getParent();
+            parent = child.getParent();
             if (parent == null || (!(parent instanceof View))) {
                 break;
             }
             if (parent instanceof RecyclerView) {
                 final RecyclerView rv = (RecyclerView) parent;
-                Object tag = rv.getTag();
+                final Object tag = rv.getTag();
                 if (null != tag && tag instanceof Point) {
                     Point point = (Point) tag;
-                    toRect.offset(rv.getLayoutManager().canScrollHorizontally() ? -point.x : 0,
-                            rv.getLayoutManager().canScrollVertically() ? -point.y : 0);
+                    if (point.x != 0) {
+                        toRect.offset(-point.x, 0);
+                    } else if (point.y != 0) {
+                        toRect.offset(0, -point.y);
+                    }
                 }
-                ELog.v(rv.getClass().getName() + "left:" + rv.getLeft() + ",top" + rv.getTop());
+//                ELog.v(rv.getClass().getName() + "left:" + rv.getLeft() + ",top" + rv.getTop());
                 toRect.offset(rv.getLeft(), rv.getTop());
             } else {
-                View parentView = (View) parent;
+                parentView = (View) parent;
                 int dx = parentView.getLeft() + parentView.getScrollX();
                 int dy = parentView.getTop() + parentView.getScrollY();
-                ELog.v(parentView.getClass().getName() + "View left:" + parentView.getLeft() + ",top" + parentView.getTop());
+//                ELog.v(parentView.getClass().getName() + "View left:" + parentView.getLeft() + ",top" + parentView.getTop());
                 toRect.offset(dx, dy);
             }
             child = (View) child.getParent();
@@ -155,8 +159,8 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         final int newX = toRect.left - fromRect.left;
         final int newY = toRect.top - fromRect.top;
 
-        ELog.v(TAG, String.format("newWidth:%d,newHeight:%d", newWidth, newHeight));
-        ELog.v(TAG, String.format("newX:%d,newY:%d", newX, newY));
+//        ELog.v(TAG, String.format("newWidth:%d,newHeight:%d", newWidth, newHeight));
+//        ELog.v(TAG, String.format("newX:%d,newY:%d", newX, newY));
 
         final List<Animator> together = new ArrayList<>();
         final List<Animator> appendTogether = getTogetherAnimators(newX, newY, newWidth, newHeight, scaleX, scaleY);
@@ -222,23 +226,6 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         return mWidthAnimator;
     }
 
-    @Deprecated
-    private void registerScrollListener(RecyclerView recyclerView) {
-        if (null != mWeakRecyclerViewRef && mWeakRecyclerViewRef.get() == recyclerView) {
-            return;
-        }
-        if (null == mRecyclerViewScrollListener) {
-            mRecyclerViewScrollListener = new RecyclerViewScrollListener(this);
-        }
-        if (null != mWeakRecyclerViewRef && null != mWeakRecyclerViewRef.get()) {
-            mWeakRecyclerViewRef.get().removeOnScrollListener(mRecyclerViewScrollListener);
-            mWeakRecyclerViewRef.clear();
-        }
-        recyclerView.removeOnScrollListener(mRecyclerViewScrollListener);
-        recyclerView.addOnScrollListener(mRecyclerViewScrollListener);
-        mWeakRecyclerViewRef = new WeakReference<>(recyclerView);
-    }
-
     abstract List<Animator> getTogetherAnimators(int newX, int newY, int newWidth, int newHeight, float scaleX, float scaleY);
 
 
@@ -259,55 +246,6 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         mAnimatorSet.start();
     }
 
-
-    protected Rect findLocationWithView(@NonNull View descendant) {
-        final ViewGroup root = (ViewGroup) getParent();
-        final Rect rect = new Rect();
-        if (descendant == root) {
-            return rect;
-        }
-
-        final View srcDescendant = descendant;
-
-        ViewParent theParent = descendant.getParent();
-        Object tag;
-        Point point;
-        rect.offset(descendant.getLeft() - descendant.getScrollX(),
-                descendant.getTop() - descendant.getScrollY());
-        // search and offset up to the parent
-        while ((theParent != null)
-                && (theParent instanceof View)
-                && (theParent != root)) {
-
-            //兼容TvRecyclerView
-            if (theParent instanceof RecyclerView) {
-                final RecyclerView rv = (RecyclerView) theParent;
-//                registerScrollListener(rv);
-                tag = rv.getTag();
-                if (null != tag && tag instanceof Point) {
-                    point = (Point) tag;
-                    rect.offset(-point.x, -point.y);
-                    ELog.v("point.x=" + point.x + " point.y=" + point.y);
-                }
-                rect.offset(rv.getLeft(), rv.getTop());
-            }
-
-            descendant = (View) theParent;
-            theParent = descendant.getParent();
-        }
-
-        // now that we are up to this view, need to offset one more time
-        // to get into our coordinate space
-        if (theParent == root) {
-            rect.offset(descendant.getLeft() - descendant.getScrollX(),
-                    descendant.getTop() - descendant.getScrollY());
-        }
-
-        rect.right = rect.left + srcDescendant.getMeasuredWidth();
-        rect.bottom = rect.top + srcDescendant.getMeasuredHeight();
-
-        return rect;
-    }
 
     protected Rect findLocationWithView2(@NonNull View view) {
         ViewGroup root = (ViewGroup) view.getParent();
@@ -337,7 +275,7 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w != oldw || h != oldh) {
-            ELog.v(TAG, String.format("w:%d,h:%d;oldw:%d,oldh:%d", w, h, oldw, oldh));
+            ELog.i(TAG, String.format("w:%d,h:%d;oldw:%d,oldh:%d", w, h, oldw, oldh));
             mFrameRectF.set(mPaddingRectF.left, mPaddingRectF.top, w - mPaddingRectF.right, h - mPaddingRectF.bottom);
         }
     }
@@ -367,40 +305,4 @@ public abstract class BaseFlyingFrameView extends View implements IFlying {
         mPaddingOfsetRectF.bottom = padding;
     }
 
-
-    @Deprecated
-    private static class RecyclerViewScrollListener extends RecyclerView.OnScrollListener {
-        private WeakReference<BaseFlyingFrameView> mFlyingFrameViewRef;
-        private int mScrolledX = 0, mScrolledY = 0;
-
-        public RecyclerViewScrollListener(BaseFlyingFrameView flyingFrameView) {
-            mFlyingFrameViewRef = new WeakReference<>(flyingFrameView);
-        }
-
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            mScrolledX = Math.abs(dx) == 1 ? 0 : dx;
-            mScrolledY = Math.abs(dy) == 1 ? 0 : dy;
-//            ELog.d("onScrolled...dx=" + dx + " dy=" + dy);
-        }
-
-        @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                ELog.e("onScrollStateChanged...IDLE");
-                final BaseFlyingFrameView flyingFrameView = mFlyingFrameViewRef.get();
-                final View focused = recyclerView.getFocusedChild();
-                ELog.e("onScrollStateChanged...border is null :" + (null == flyingFrameView));
-                if (null != flyingFrameView && null != focused) {
-                    if (mScrolledX != 0 || mScrolledY != 0) {
-                        ELog.i("onScrollStateChanged...scleX = " + flyingFrameView.mScaleX + " scleY = " + flyingFrameView.mScaleY);
-//                        flyingFrameView.runBorderAnimation(focused, flyingFrameView.mScaleX, flyingFrameView.mScaleY);
-                    }
-                } else {
-                    ELog.e("flyingFrameView or focused is null:" + (null == focused));
-                }
-                mScrolledX = mScrolledY = 0;
-            }
-        }
-    }
 }

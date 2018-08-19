@@ -15,12 +15,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.leakcanary.RefWatcher;
+
 import java.util.List;
 
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.file.adapter.AppListAdapter;
 import cn.fengmang.file.bean.AppInfo;
+import cn.fengmang.file.service.TaskService;
+import cn.fengmang.file.task.GetIpTask;
 import cn.fengmang.file.utils.AppHelper;
+import cn.fengmang.file.widget.FMToast;
 import cn.fengmang.file.widget.StatusItemView;
 import cn.fengmang.file.widget.StatusView;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
@@ -99,7 +104,7 @@ public class FMAppActivity extends FMBaseTitleActivity implements OnItemClickLis
         setSubTitle(String.format("共%d个应用", mAppList.size()));
         setFooter();
 
-
+        TaskService.getInstance().addTask(new GetIpTask(FMApplication.getInstance()));
     }
 
     private void initData() {
@@ -124,6 +129,9 @@ public class FMAppActivity extends FMBaseTitleActivity implements OnItemClickLis
     protected void onDestroy() {
         unregisterReceiver(mReceiver);
         super.onDestroy();
+        RefWatcher refWatcher = FMApplication.getRefWatcher(this);
+        refWatcher.watch(this);
+
     }
 
     @Override
@@ -152,7 +160,7 @@ public class FMAppActivity extends FMBaseTitleActivity implements OnItemClickLis
     public boolean onItemLongClick(RecyclerView parent, View itemView, int position) {
         final String packageName = mAppList.get(position).getmPackageInfo().packageName;
         if (packageName.equals(getPackageName())) {
-            Toast.makeText(this, "不能卸载自己", Toast.LENGTH_SHORT).show();
+            new FMToast(this).text("不能卸载自己").show();
         }
         AppHelper.uninstall(packageName, this);
         return true;

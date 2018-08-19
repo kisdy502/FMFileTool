@@ -38,6 +38,7 @@ import cn.fengmang.file.utils.FileIntentHelper;
 import cn.fengmang.file.utils.FileOptHelper;
 import cn.fengmang.file.utils.FileTagHelper;
 import cn.fengmang.file.utils.MemHelper;
+import cn.fengmang.file.widget.FMToast;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.libui.recycler.FMRecyclerView;
 import cn.fengmang.libui.recycler.OnItemClickListener;
@@ -387,13 +388,23 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
             initLayoutManager();
             mAdapter = new FileListAdapter(mCheckStatus, mViewtMode, mFileItemList, getApplicationContext());
             mFileRecyclerView.setAdapter(mAdapter);
-            mFileRecyclerView.requestFocus();
+            mFileRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mFileRecyclerView.requestFocus();
+                }
+            });
         } else if ("grid_view".equals(cmd)) {
             mViewtMode = FileOptHelper.VIEW_MODE_GRID;
             initLayoutManager();
             mAdapter = new FileListAdapter(mCheckStatus, mViewtMode, mFileItemList, getApplicationContext());
             mFileRecyclerView.setAdapter(mAdapter);
-            mFileRecyclerView.requestFocus();
+            mFileRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mFileRecyclerView.requestFocus();
+                }
+            });
         } else if ("rename".equals(cmd)) {
             showRenameDialog();
         } else if ("file_prop".equals(cmd)) {
@@ -432,9 +443,9 @@ public class FMFileActivity extends FMBaseTitleActivity implements OnOptClickLis
                     mAdapter.notifyItemInserted(mFileItemList.size() - 1);
                     mFileRecyclerView.smoothScrollToPosition(mFileItemList.size() - 1);
                 }
-                Toast.makeText(this, "新建文件夹成功", Toast.LENGTH_SHORT).show();
+                new FMToast(this).text("新建文件夹成功").show();
             } else {
-                Toast.makeText(this, "新建文件夹失败", Toast.LENGTH_SHORT).show();
+                new FMToast(this).text("新建文件夹失败").show();
             }
         } else if ("all_select".equals(cmd)) {
             setAllFile(true);

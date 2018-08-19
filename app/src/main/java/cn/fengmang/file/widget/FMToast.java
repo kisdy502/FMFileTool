@@ -24,8 +24,8 @@ public class FMToast extends Toast {
     }
 
     public FMToast(Context context, int resId, int textViewId) {
-        super(context);
-        mContext = context;
+        super(context.getApplicationContext());
+        mContext = context.getApplicationContext();
         setView(resId, textViewId);
     }
 
@@ -42,26 +42,6 @@ public class FMToast extends Toast {
         mToastTxt = (TextView) v.findViewById(textViewId);
         setView(v);
         return this;
-    }
-
-    /**
-     * 使用{@link (CharSequence)}替代
-     * 不再调用super.setText(CharSequence), 会抛出"java.lang.RuntimeException: This Toast was not created with Toast.makeText()"
-     */
-    @Deprecated
-    @Override
-    public void setText(CharSequence s) {
-        ELog.w(TAG, "setText(CharSequence), depreated function.");
-    }
-
-    /**
-     * 使用{@link #text(int)}替代
-     * 不再调用super.setText(int), 会抛出"java.lang.RuntimeException: This Toast was not created with Toast.makeText()"
-     */
-    @Deprecated
-    @Override
-    public void setText(int resId) {
-        ELog.w(TAG, "setText(int), depreated function.");
     }
 
     public FMToast text(String txt) {

@@ -13,8 +13,11 @@ import java.util.List;
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.file.adapter.HomeTitleAdapter;
 import cn.fengmang.file.adapter.VideoListAdapter;
+import cn.fengmang.file.bean.HotInfo;
 import cn.fengmang.file.bean.TitleBean;
 import cn.fengmang.file.bean.VideoListBean;
+import cn.fengmang.file.service.TaskService;
+import cn.fengmang.file.task.GetIpTask;
 import cn.fengmang.file.utils.ImgUrlCreator;
 import cn.fengmang.libui.flying.DrawableFlyingFrameView;
 import cn.fengmang.libui.recycler.FMRecyclerView;
@@ -70,6 +73,8 @@ public class FMVideoHomeActivity extends FMBaseActivity {
 
         initTitle();
         initContent();
+
+
     }
 
 
@@ -81,6 +86,13 @@ public class FMVideoHomeActivity extends FMBaseActivity {
         TitleBean titleBean4 = new TitleBean("IPTV");
         TitleBean titleBean5 = new TitleBean("我的");
         TitleBean titleBean6 = new TitleBean("购物");
+        TitleBean titleBean7 = new TitleBean("优酷网");
+        TitleBean titleBean8 = new TitleBean("百视通");
+        TitleBean titleBean9 = new TitleBean("36氪氢");
+        TitleBean titleBean10 = new TitleBean("头条热搜");
+        TitleBean titleBean11 = new TitleBean("金典影视");
+        TitleBean titleBean12 = new TitleBean("TVB剧场");
+        TitleBean titleBean13 = new TitleBean("颤抖美剧");
         List<TitleBean> beanList = new ArrayList<>();
         beanList.add(titleBean0);
         beanList.add(titleBean1);
@@ -89,6 +101,13 @@ public class FMVideoHomeActivity extends FMBaseActivity {
         beanList.add(titleBean4);
         beanList.add(titleBean5);
         beanList.add(titleBean6);
+        beanList.add(titleBean7);
+        beanList.add(titleBean8);
+        beanList.add(titleBean9);
+        beanList.add(titleBean10);
+        beanList.add(titleBean11);
+        beanList.add(titleBean12);
+        beanList.add(titleBean13);
         mHomeTitleAdapter = new HomeTitleAdapter(this, beanList);
         mTitleRecyclerView.setAdapter(mHomeTitleAdapter);
 
@@ -97,9 +116,11 @@ public class FMVideoHomeActivity extends FMBaseActivity {
     private void initContent() {
         List<VideoListBean.Performer> performerList = initPerformerList();
         List<VideoListBean.VideoInfo> videoInfoList = initVieoInfoList();
+        List<HotInfo> hotInfoList = initHotAppList();
         VideoListBean videoListBean = new VideoListBean();
         videoListBean.setPerformerList(performerList);
         videoListBean.setVideoInfoList(videoInfoList);
+        videoListBean.setHotInfoList(hotInfoList);
 
         mVideoListAdapter = new VideoListAdapter(this, videoListBean);
         mVideoListAdapter.setItemFocusChangeListener(new OnItemFocusChangeListener() {
@@ -120,13 +141,6 @@ public class FMVideoHomeActivity extends FMBaseActivity {
             }
         });
         mContentRecyclerView.setAdapter(mVideoListAdapter);
-
-        mContentRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                ELog.e("left" + mContentRecyclerView.getLeft() + ",top:" + mContentRecyclerView.getTop());
-            }
-        });
     }
 
     private List<VideoListBean.Performer> initPerformerList() {
@@ -249,5 +263,46 @@ public class FMVideoHomeActivity extends FMBaseActivity {
         videoInfoList.add(videoInfo6);
 
         return videoInfoList;
+    }
+
+    private List<HotInfo> initHotAppList() {
+        List<HotInfo> hotInfoList = new ArrayList<>();
+
+        HotInfo hotInfo0 = new HotInfo();
+        hotInfo0.setHotDesc("零点影视");
+        List<String> urls0 = new ArrayList<>();
+        urls0.add(ImgUrlCreator.getMovieUrl());
+        urls0.add(ImgUrlCreator.getMovieUrl());
+        urls0.add(ImgUrlCreator.getUrl());
+        urls0.add(ImgUrlCreator.getMovieUrl());
+        hotInfo0.setHotUrls(urls0);
+
+        hotInfoList.add(hotInfo0);
+
+
+        HotInfo hotInfo1 = new HotInfo();
+        hotInfo0.setHotDesc("零点影视");
+        List<String> urls1 = new ArrayList<>();
+        urls1.add(ImgUrlCreator.getMovieUrl());
+        urls1.add(ImgUrlCreator.getMovieUrl());
+        urls1.add(ImgUrlCreator.getUrl());
+        urls1.add(ImgUrlCreator.getMovieUrl());
+        hotInfo1.setHotUrls(urls1);
+
+        hotInfoList.add(hotInfo1);
+
+
+        HotInfo hotInfo2 = new HotInfo();
+        hotInfo2.setHotDesc("零点影视");
+        List<String> urls2 = new ArrayList<>();
+        urls2.add(ImgUrlCreator.getMovieUrl());
+        urls2.add(ImgUrlCreator.getMovieUrl());
+        urls2.add(ImgUrlCreator.getUrl());
+        urls2.add(ImgUrlCreator.getMovieUrl());
+        hotInfo2.setHotUrls(urls2);
+
+        hotInfoList.add(hotInfo2);
+
+        return hotInfoList;
     }
 }

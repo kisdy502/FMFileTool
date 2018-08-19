@@ -7,12 +7,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.fengmang.file.FMApplication;
 import cn.fengmang.file.bean.AppInfo;
+import cn.fengmang.file.widget.FMToast;
 
 /**
  * Created by Administrator on 2018/7/6.
@@ -74,9 +75,13 @@ public class AppHelper {
         if (packageInfo == null) {
             return;
         }
+        if (packageInfo.packageName.equals(context.getPackageName())) {
+            new FMToast(FMApplication.getInstance()).text("应用已经启动").show();
+            return;
+        }
         Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageInfo.packageName);
         if (launchIntent == null) {
-            Toast.makeText(context, "没有主界面，无法启动", Toast.LENGTH_SHORT).show();
+            new FMToast(FMApplication.getInstance()).text("没有主界面，无法启动").show();
             return;
         }
         context.startActivity(launchIntent);

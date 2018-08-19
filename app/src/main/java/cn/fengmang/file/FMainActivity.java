@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.fengmang.baselib.ELog;
+import cn.fengmang.file.service.TaskService;
+import cn.fengmang.file.task.GetIpTask;
 import cn.fengmang.file.utils.MemHelper;
 import cn.fengmang.file.utils.NetListenerHelper;
 import cn.fengmang.file.utils.PermissionsUtil;
@@ -26,6 +28,7 @@ import cn.fengmang.libui.recycler.OnItemClickListener;
 import cn.fengmang.libui.recycler.OnItemFocusChangeListener;
 import cn.fm.libmini.test.FileUpload;
 import cn.fm.libupload.HttpUploadHelper;
+import q.rorbin.badgeview.QBadgeView;
 
 public class FMainActivity extends FMBaseActivity {
 
@@ -59,12 +62,11 @@ public class FMainActivity extends FMBaseActivity {
         mFlyingView.setFlyingDrawable(getResources().getDrawable(R.drawable.hover_item));
         MemHelper.printfTvInfo(this);
 
-        NetListenerHelper.initListener(this);
-
+//        NetListenerHelper.initListener(this);
+        ELog.d("TaskService is Start:" + (TaskService.getInstance() == null));
     }
 
     long start;
-
 
     private void initView() {
         mTvList = ((FMRecyclerView) findViewById(R.id.trv));
@@ -128,6 +130,8 @@ public class FMainActivity extends FMBaseActivity {
         });
         mAdapter = new MenuAdapter();
         mTvList.setAdapter(mAdapter);
+
+
     }
 
 
@@ -156,6 +160,9 @@ public class FMainActivity extends FMBaseActivity {
         @Override
         public void onBindViewHolder(MenuHolder holder, int position) {
             holder.itemDesc.setText(mDatas.get(position).data);
+            if (position == 0)
+                new QBadgeView(getApplicationContext()).bindTarget(holder.itemDesc).setBadgeText("New");
+
         }
 
         @Override

@@ -36,6 +36,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
         this.videoListBean = videoListBean;
     }
 
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(new FMRecyclerView(mContext));
@@ -47,7 +48,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
 
         if (position == 0) {
             PerformerAdapter adapter = new PerformerAdapter(mContext, videoListBean.getPerformerList());
-            V7GridLayoutManager layoutManager = new V7GridLayoutManager(mContext, 5, LinearLayoutManager.VERTICAL, false);
+            V7GridLayoutManager layoutManager = new V7GridLayoutManager(mContext, 7, LinearLayoutManager.VERTICAL, false);
             holder.mRecyclerView.setSpaceVerticalAndHorizontal(mContext.getResources().getDimensionPixelOffset(R.dimen.h36),
                     mContext.getResources().getDimensionPixelOffset(R.dimen.w36));
             holder.mRecyclerView.setLayoutManager(layoutManager);
@@ -60,13 +61,20 @@ public class VideoListAdapter extends RecyclerView.Adapter<VideoListAdapter.View
                     mContext.getResources().getDimensionPixelOffset(R.dimen.w36));
             holder.mRecyclerView.setLayoutManager(layoutManager);
             holder.mRecyclerView.setAdapter(adapter);
+        } else if (position == 2) {
+            HotAppAdapter adapter = new HotAppAdapter(mContext, videoListBean.getHotInfoList());
+            V7GridLayoutManager layoutManager = new V7GridLayoutManager(mContext, 3, LinearLayoutManager.VERTICAL, false);
+            holder.mRecyclerView.setSpaceVerticalAndHorizontal(mContext.getResources().getDimensionPixelOffset(R.dimen.h36),
+                    mContext.getResources().getDimensionPixelOffset(R.dimen.w36));
+            holder.mRecyclerView.setLayoutManager(layoutManager);
+            holder.mRecyclerView.setAdapter(adapter);
         }
         holder.mRecyclerView.setOnItemFocusListener(itemFocusChangeListener);
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

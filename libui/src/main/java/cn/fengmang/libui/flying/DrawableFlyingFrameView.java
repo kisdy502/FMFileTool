@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import cn.fengmang.baselib.ELog;
 import cn.fengmang.libui.R;
 
 
@@ -45,6 +46,7 @@ public class DrawableFlyingFrameView extends BaseFlyingFrameView {
             final Rect paddingRect = new Rect();
             mFlyingDrawable.getPadding(paddingRect);
             mPaddingRectF.set(paddingRect);
+            ELog.e(mFlyingDrawable.getClass().getName());
             if (Build.VERSION.SDK_INT >= 16) {
                 setBackground(mFlyingDrawable);
             } else {

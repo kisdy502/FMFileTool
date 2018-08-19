@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.fengmang.file.R;
+import cn.fengmang.file.widget.FMToast;
 
 /**
  * Created by Administrator on 2018/7/3.
@@ -84,7 +85,7 @@ public class FileRenameDialogFragment extends BaseDialogFragment implements View
             case R.id.btn_opt:
                 String newName = mEdtNewFileName.getText().toString();
                 if (TextUtils.isEmpty(newName)) {
-                    Toast.makeText(getContext(), "重命名的文件名字不能为空", Toast.LENGTH_SHORT).show();
+                    new FMToast(getContext()).text("重命名的文件名字不能为空").show();
                 } else {
                     if (onOptClickListener != null) {
                         onOptClickListener.onExecOpt(v, cmd, newName);

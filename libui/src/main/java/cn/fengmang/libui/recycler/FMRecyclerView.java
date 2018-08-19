@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.widget.Adapter;
 
 import cn.fengmang.baselib.ELog;
 import cn.fengmang.libui.R;
@@ -111,10 +112,10 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
                             itemView.setActivated(false);
                         }
                         int childAdapterPosition = getChildAdapterPosition(itemView);
-                        ELog.d("mCurrentFocusPosition:" + mCurrentFocusPosition);
-                        ELog.d("childAdapterPosition:" + childAdapterPosition);
+//                        ELog.d("mCurrentFocusPosition:" + mCurrentFocusPosition);
+//                        ELog.d("childAdapterPosition:" + childAdapterPosition);
                         onItemListener.onItemSelected(FMRecyclerView.this, itemView, getChildLayoutPosition(itemView));
-                        ELog.d(TAG, "onFocusChange:" + mCurrentFocusPosition);
+//                        ELog.d(TAG, "onFocusChange:" + mCurrentFocusPosition);
                     } else {
                         itemView.postDelayed(new Runnable() {
                             @Override
@@ -135,9 +136,10 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         };
     }
 
+
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-        ELog.i("direction..." + direction);
+//        ELog.i("direction..." + direction);
         if (null == getFocusedChild()) {
             //请求默认焦点
             requestDefaultFocus();
@@ -146,9 +148,12 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     }
 
     public void requestDefaultFocus() {
+//        ELog.d("mIsSelectFirstVisiblePosition:" + mIsSelectFirstVisiblePosition);
         if (mIsMenu || !mIsSelectFirstVisiblePosition) {
+//            ELog.d("setSelection mCurrentFocusPosition:" + mCurrentFocusPosition);
             setSelection(mCurrentFocusPosition);
         } else {
+//            ELog.d("setSelection getFirstVisiblePosition:" + getFirstVisiblePosition());
             setSelection(getFirstVisiblePosition());
         }
     }
@@ -157,6 +162,8 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         if (null == getAdapter() || position < 0 || position >= getItemCount()) {
             return;
         }
+//        ELog.d("position:" + position);
+//        ELog.d("getFirstVisiblePosition():" + getFirstVisiblePosition());
         View view = getChildAt(position - getFirstVisiblePosition());
         if (null != view) {
             if (!hasFocus()) {
@@ -165,13 +172,13 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
             }
             view.requestFocus();
         } else {
-            ELog.e("view is null:" + position);
+//            ELog.e("view is null:" + position);
         }
     }
 
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
-        ELog.i("gainFocus=" + gainFocus + " hasFocus=" + hasFocus() + " direction=" + direction);
+//        ELog.i("gainFocus=" + gainFocus + " hasFocus=" + hasFocus() + " direction=" + direction);
         if (gainFocus) {
             setDescendantFocusability(FOCUS_BEFORE_DESCENDANTS);
         } else {
@@ -213,8 +220,7 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
 
     @Override
     public void requestChildFocus(View child, View focused) {
-        // 获取焦点框居中的位置
-        ELog.d("requestChildFocus");
+//        ELog.i("requestChildFocus... hasFocus=" + hasFocus());
         if (null != child) {
             if (mSelectedItemCentered) {
                 mSelectedItemOffsetStart = (mOrientation == HORIZONTAL) ? (getFreeWidth() - child.getWidth()) : (getFreeHeight() - child.getHeight());
@@ -241,7 +247,7 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     public void onScrollStateChanged(int state) {
         if (state == SCROLL_STATE_IDLE) {
-            ELog.d("SCROLL_STATE_IDLE");
+//            ELog.d("SCROLL_STATE_IDLE");
             setScrollValue(0, 0);
             if (onItemListener != null) {
                 onItemListener.onReviseFocusFollow(FMRecyclerView.this, getFocusedChild(), getChildLayoutPosition(getFocusedChild()));
@@ -261,14 +267,14 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         final int parentTop = getPaddingTop();
         final int parentRight = getWidth() - getPaddingRight();
         final int parentBottom = getHeight() - getPaddingBottom();
-        ELog.v(TAG, String.format("pL:%d,pT:%d,pR:%d,pB:%d", parentLeft, parentTop, parentRight, parentBottom));
+//        ELog.v(TAG, String.format("pL:%d,pT:%d,pR:%d,pB:%d", parentLeft, parentTop, parentRight, parentBottom));
 
         //计算出child,此时是获取焦点的view请求的区域
         final int childLeft = child.getLeft() + rect.left;
         final int childTop = child.getTop() + rect.top;
         final int childRight = childLeft + rect.width();
         final int childBottom = childTop + rect.height();
-        ELog.v(TAG, String.format("cL:%d,cT:%d,cR:%d,cB:%d", childLeft, childTop, childRight, childBottom));
+//        ELog.v(TAG, String.format("cL:%d,cT:%d,cR:%d,cB:%d", childLeft, childTop, childRight, childBottom));
 
         //获取请求区域四个方向与RecyclerView内容四个方向的距离
         final int offScreenLeft = Math.min(0, childLeft - parentLeft - mSelectedItemOffsetStart);
@@ -330,7 +336,7 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     @Override
     public void smoothScrollBy(int dx, int dy, Interpolator interpolator) {
         setScrollValue(dx, dy);
-        ELog.e("dx:" + dx + ",dy:" + dy);
+//        ELog.e("dx:" + dx + ",dy:" + dy);
         super.smoothScrollBy(dx, dy, interpolator);
     }
 
@@ -423,11 +429,25 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
         }
     }
 
+    private boolean mHasFocusWithPrevious = false;
+
     @Override
     public void setAdapter(Adapter adapter) {
-        mCurrentFocusPosition = 0;
+        if (null == adapter) return;
+        Adapter oldAdapter = getAdapter();
+        View view = getChildAt(0);
+        if (oldAdapter != null && view != null) {
+            mHasFocusWithPrevious = hasFocus();
+//            ELog.d("mHasFocusWithPrevious:" + mHasFocusWithPrevious);
+            int start = getLayoutManager().canScrollVertically() ? getLayoutManager().getDecoratedTop(view) : getLayoutManager().getDecoratedLeft(view);
+            start -= getLayoutManager().canScrollVertically() ? getPaddingTop() : getPaddingLeft();
+            scrollBy(start, start);
+        } else {
+            mCurrentFocusPosition = 0;
+        }
         super.setAdapter(adapter);
     }
+
 
     @Override
     public void onClick(View itemView) {
@@ -454,6 +474,5 @@ public class FMRecyclerView extends RecyclerView implements View.OnClickListener
     public void setOnItemFocusListener(OnItemFocusChangeListener onItemListener) {
         this.onItemListener = onItemListener;
     }
-
 
 }

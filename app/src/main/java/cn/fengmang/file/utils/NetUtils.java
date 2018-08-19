@@ -16,6 +16,7 @@ import java.util.Enumeration;
 import java.util.UUID;
 
 import cn.fengmang.baselib.ELog;
+import cn.fengmang.baselib.IOUtil;
 
 public class NetUtils {
 
@@ -152,15 +153,16 @@ public class NetUtils {
     }
 
     /**
-     * 检查当有线是否插入
+     * 检查当有线是否插入,仅针对Android电视或者Android OTT盒子
      *
      * @return
      */
     public static boolean isCablePlugin() {
         final String netFile = "/sys/class/net/eth0/operstate";
         String res = "";
+        FileInputStream fin = null;
         try {
-            FileInputStream fin = new FileInputStream(netFile);
+            fin = new FileInputStream(netFile);
             int length = fin.available();
             byte[] buffer = new byte[length];
             fin.read(buffer);
@@ -168,6 +170,8 @@ public class NetUtils {
             fin.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            IOUtil.closeQuietly(fin);
         }
         if (null != res) {
             if ("up".equals(res.trim()) || "unknown".equals(res.trim())) {

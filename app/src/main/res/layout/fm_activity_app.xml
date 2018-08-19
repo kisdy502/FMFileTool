@@ -37,7 +37,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/statusView"
         app:recyclerPaddingHorizontal="@dimen/w72"
-        app:recyclerPaddingVertical="@dimen/h22" />
+        app:recyclerPaddingVertical="@dimen/h22"
+        app:tvIsSelectFirstVisiblePosition="true"/>
 
 
     <TextView
